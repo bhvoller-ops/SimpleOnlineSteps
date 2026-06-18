@@ -7,7 +7,7 @@ interface FooterProps {
 const footerLinks = {
   'Get Started': [
     { label: 'Start Here', page: 'start-here' },
-    { label: 'Take the Quiz', page: 'start-here' },
+    { label: 'Business Launch Quiz', page: 'start' },
     { label: 'Book a Free Call', page: 'book-call' },
   ],
   Systems: [

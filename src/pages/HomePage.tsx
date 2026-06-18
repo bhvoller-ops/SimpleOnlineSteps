@@ -193,10 +193,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14">
             <button
-              onClick={() => navigate('start-here')}
+              onClick={() => navigate('quiz')}
               className="group inline-flex items-center gap-2.5 px-7 py-4 bg-blue-600 text-white text-base font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-0.5"
             >
-              Find My Best Business Model
+              Take the Free Business Launch Quiz
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
             <button
@@ -204,7 +204,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               className="inline-flex items-center gap-2.5 px-7 py-4 bg-white text-gray-800 text-base font-semibold rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 hover:-translate-y-0.5"
             >
               <Play className="w-4 h-4 text-blue-600" />
-              Explore Business-in-a-Box
+              Explore Business-in-a-Box Systems
             </button>
           </div>
 
@@ -490,7 +490,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           </p>
 
           <button
-            onClick={() => navigate('start-here')}
+            onClick={() => navigate('quiz')}
             className="group inline-flex items-center gap-3 px-8 py-4.5 bg-blue-600 text-white text-lg font-bold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-2xl shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-0.5"
             style={{ paddingTop: '1.125rem', paddingBottom: '1.125rem' }}
           >

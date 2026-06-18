@@ -9,6 +9,7 @@ interface NavbarProps {
 const navLinks = [
   { label: 'Home', page: 'home' },
   { label: 'Start Here', page: 'start-here' },
+  { label: 'Business Launch Quiz', page: 'start' },
   { label: 'Business-in-a-Box', page: 'business-box' },
   { label: 'Tools', page: 'tools' },
   { label: 'About', page: 'about' },

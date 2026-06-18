@@ -7,8 +7,10 @@ import BusinessBoxPage from './pages/BusinessBoxPage';
 import ToolsPage from './pages/ToolsPage';
 import AboutPage from './pages/AboutPage';
 import BookCallPage from './pages/BookCallPage';
+import QuizPage from './pages/QuizPage';
+import StartPage from './pages/StartPage';
 
-type Page = 'home' | 'start-here' | 'business-box' | 'tools' | 'about' | 'book-call';
+type Page = 'home' | 'start-here' | 'business-box' | 'tools' | 'about' | 'book-call' | 'quiz' | 'start';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -31,6 +33,10 @@ export default function App() {
         return <AboutPage onNavigate={navigate} />;
       case 'book-call':
         return <BookCallPage onNavigate={navigate} />;
+      case 'quiz':
+        return <QuizPage onNavigate={navigate} />;
+      case 'start':
+        return <StartPage onNavigate={navigate} />;
       default:
         return <HomePage onNavigate={navigate} />;
     }
