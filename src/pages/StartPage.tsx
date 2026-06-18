@@ -1,841 +1,873 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   ArrowRight,
   ArrowLeft,
   CheckCircle,
   Brain,
   DollarSign,
-  Rocket,
-  Zap,
+  Clock,
+  Briefcase,
   Globe,
   FileText,
   MapPin,
-  TrendingUp,
-  Clock,
-  Target,
   Sparkles,
   User,
   Mail,
-  Phone,
-  Star,
-  BarChart3,
-  ChevronRight,
-  BookOpen,
   Megaphone,
+  Rocket,
+  Phone,
+  Zap,
+  BookOpen,
+  TrendingUp,
+  LayoutGrid,
+  ChevronRight,
+  Star,
+  RefreshCw,
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 
 interface StartPageProps {
   onNavigate: (page: string) => void;
 }
 
-// ─── Questions ──────────────────────────────────────────────────────────────
+// ─── Data ────────────────────────────────────────────────────────────────────
 
-const questions = [
+const QUESTIONS = [
   {
     id: 'goal',
-    step: '01',
-    label: 'Goal',
-    question: 'What is your main goal?',
-    subtitle: 'Pick the one that best describes where you want to be.',
+    question: 'What is your primary goal?',
     options: [
-      { label: 'Replace My Full-Time Income', value: 'replace', icon: Rocket, desc: 'Quit my job and go all-in online' },
-      { label: 'Earn Extra Side Income', value: 'side-income', icon: DollarSign, desc: 'Keep my job and earn on the side' },
-      { label: 'Build a Scalable Business', value: 'scale', icon: TrendingUp, desc: 'Build a system that grows with me' },
-      { label: 'Learn AI & New Skills', value: 'learn-ai', icon: Brain, desc: 'Master modern tools and new opportunities' },
+      { label: 'Learn AI',              value: 'learn-ai',        icon: Brain,      desc: 'Master AI tools and cutting-edge skills' },
+      { label: 'Create Side Income',    value: 'side-income',     icon: DollarSign, desc: 'Earn extra money alongside your current job' },
+      { label: 'Start a Full Business', value: 'full-business',   icon: Rocket,     desc: 'Build a complete, scalable online business' },
+      { label: 'Change Careers',        value: 'career-change',   icon: TrendingUp, desc: 'Transition into a new field or industry' },
     ],
   },
   {
     id: 'budget',
-    step: '02',
-    label: 'Budget',
-    question: 'What is your starting budget?',
-    subtitle: 'Every path has options — be honest for the best match.',
+    question: 'What is your startup budget?',
     options: [
-      { label: 'Under $100', value: 'under-100', icon: DollarSign, desc: 'Starting very lean' },
-      { label: '$100 – $500', value: '100-500', icon: DollarSign, desc: 'Some room to invest' },
-      { label: '$500 – $2,000', value: '500-2000', icon: DollarSign, desc: 'Serious about launching' },
-      { label: '$2,000+', value: '2000-plus', icon: DollarSign, desc: 'Ready to move fast' },
+      { label: 'Under $100',     value: 'under-100',  icon: DollarSign, desc: 'Starting very lean' },
+      { label: '$100 – $500',    value: '100-500',    icon: DollarSign, desc: 'A small investment to get started' },
+      { label: '$500 – $2,000',  value: '500-2000',   icon: DollarSign, desc: 'Serious about launching right' },
+      { label: '$2,000+',        value: '2000-plus',  icon: DollarSign, desc: 'Ready to invest and move fast' },
     ],
   },
   {
     id: 'time',
-    step: '03',
-    label: 'Time',
-    question: 'How many hours per week can you commit?',
-    subtitle: 'We will match you to models that fit your schedule.',
+    question: 'How much time can you commit each week?',
     options: [
-      { label: 'Under 5 Hours / Week', value: 'under-5', icon: Clock, desc: 'Very limited — nights and weekends' },
-      { label: '5 – 10 Hours / Week', value: '5-10', icon: Clock, desc: 'Part-time commitment' },
-      { label: '10 – 20 Hours / Week', value: '10-20', icon: Clock, desc: 'Strong part-time push' },
-      { label: 'Full Time (20+ Hours)', value: 'full-time', icon: Clock, desc: 'All in — ready to go fast' },
+      { label: 'Under 5 Hours',  value: 'under-5',   icon: Clock, desc: 'Evenings and weekends only' },
+      { label: '5 – 10 Hours',   value: '5-10',      icon: Clock, desc: 'Consistent part-time effort' },
+      { label: '10 – 20 Hours',  value: '10-20',     icon: Clock, desc: 'A strong part-time push' },
+      { label: 'Full Time',      value: 'full-time', icon: Clock, desc: '20+ hours — going all in' },
     ],
   },
   {
     id: 'interest',
-    step: '04',
-    label: 'Skills',
-    question: 'What best describes your skills or interests?',
-    subtitle: 'No experience needed — just pick what resonates.',
+    question: 'What type of work interests you most?',
     options: [
-      { label: 'AI & Technology', value: 'tech-ai', icon: Brain, desc: 'ChatGPT, automation, tools' },
-      { label: 'Writing & Content', value: 'writing-content', icon: FileText, desc: 'Creating, teaching, storytelling' },
-      { label: 'Web & Design', value: 'design-web', icon: Globe, desc: 'Websites, visuals, branding' },
-      { label: 'Sales & Marketing', value: 'sales-marketing', icon: Megaphone, desc: 'Outreach, funnels, client work' },
-      { label: 'Local & Service Work', value: 'local-service', icon: MapPin, desc: 'Hands-on, community-based' },
+      { label: 'Helping Businesses',          value: 'helping-biz',    icon: Briefcase, desc: 'Consulting, AI services, and automation' },
+      { label: 'Building Websites',           value: 'building-sites', icon: Globe,     desc: 'Web design, development, digital presence' },
+      { label: 'Creating Content',            value: 'content',        icon: Megaphone, desc: 'Writing, video, blogging, social media' },
+      { label: 'Selling Digital Products',    value: 'digital-prod',   icon: FileText,  desc: 'Ebooks, courses, templates, downloads' },
+      { label: 'Planning Travel Experiences', value: 'travel',         icon: MapPin,    desc: 'Itineraries, travel guides, concierge' },
     ],
   },
   {
-    id: 'income_goal',
-    step: '05',
-    label: 'Income',
-    question: 'What is your monthly income goal?',
-    subtitle: 'Pick the number that would genuinely change your life.',
+    id: 'income',
+    question: 'What is your income goal?',
     options: [
-      { label: '$500 / month', value: '500', icon: BarChart3, desc: 'A meaningful side boost' },
-      { label: '$1,000 – $3,000 / month', value: '1000-3000', icon: BarChart3, desc: 'Replace a bill or two' },
-      { label: '$3,000 – $10,000 / month', value: '3000-10000', icon: BarChart3, desc: 'Replace your job income' },
-      { label: '$10,000+ / month', value: '10000-plus', icon: BarChart3, desc: 'Life-changing business income' },
+      { label: '$500 / month',    value: '500',        icon: DollarSign, desc: 'A meaningful boost to my budget' },
+      { label: '$1,000 / month',  value: '1000',       icon: DollarSign, desc: 'Cover a major recurring expense' },
+      { label: '$5,000 / month',  value: '5000',       icon: DollarSign, desc: 'Replace or match my current income' },
+      { label: '$10,000+ / month',value: '10000-plus', icon: DollarSign, desc: 'Build serious, life-changing income' },
     ],
   },
 ];
 
-// ─── Results ────────────────────────────────────────────────────────────────
+type PathKey = 'ai-agency' | 'contractor' | 'ebook' | 'travel' | 'affiliate';
 
-const results = [
-  {
-    key: 'ai-agency',
-    title: 'AI Agency Owner',
-    tagline: 'Sell AI-powered services to businesses that need them.',
-    desc: 'You are a strong fit to build and sell AI services — automation, chatbots, and content systems — to businesses desperate for help. High income ceiling, fast ramp, no tech degree required.',
+const PATHS: Record<PathKey, {
+  title: string;
+  tagline: string;
+  description: string;
+  icon: React.ElementType;
+  accent: string;
+  accentBg: string;
+  textColor: string;
+  income: string;
+  timeline: string;
+  level: string;
+  highlights: string[];
+}> = {
+  'ai-agency': {
+    title: 'AI Agency Path',
+    tagline: 'High demand. Recurring revenue. No degree required.',
+    description: 'Learn AI, offer services to local businesses, and build recurring monthly income. You become the bridge between AI tools and the businesses that desperately need them.',
     icon: Brain,
-    color: 'text-blue-600',
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
     accent: '#2563EB',
-    accentLight: '#EFF6FF',
-    box: 'AI Agency Launch Box',
+    accentBg: '#EFF6FF',
+    textColor: 'text-blue-600',
     income: '$3,000 – $12,000/mo',
     timeline: '3–6 weeks to first client',
-    difficulty: 'Intermediate',
+    level: 'Intermediate',
     highlights: [
-      'No tech background required',
-      'High-demand, low-competition niche',
-      'Recurring retainer model',
-      'Scalable with systems and AI',
+      'No prior technical background needed',
+      'Recurring monthly retainer model',
+      'AI tools handle most of the heavy lifting',
+      'Fastest path to high recurring income',
     ],
   },
-  {
-    key: 'contractor',
+  'contractor': {
     title: 'Contractor Website Business',
-    tagline: 'Build websites and generate leads for local contractors.',
-    desc: 'Local contractors — plumbers, roofers, landscapers — need websites and leads but have no time. You become their digital partner, build once, and earn a recurring monthly retainer.',
+    tagline: 'Serve an underserved local market that pays monthly.',
+    description: 'Build and sell websites and lead generation systems for contractors and local businesses. Plumbers, roofers, and landscapers need digital help — and they pay monthly retainers.',
     icon: Globe,
-    color: 'text-emerald-600',
-    bg: 'bg-emerald-50',
-    border: 'border-emerald-200',
     accent: '#059669',
-    accentLight: '#ECFDF5',
-    box: 'Contractor Growth Box',
+    accentBg: '#ECFDF5',
+    textColor: 'text-emerald-600',
     income: '$2,000 – $10,000/mo',
     timeline: '2–4 weeks to first client',
-    difficulty: 'Beginner–Intermediate',
+    level: 'Beginner–Intermediate',
     highlights: [
       'Massive underserved local market',
       'Recurring monthly retainer income',
-      'Templates make delivery fast',
-      'No cold calling required',
+      'Done-for-you templates make delivery fast',
+      'Simple, repeatable sales process',
     ],
   },
-  {
-    key: 'ebook',
-    title: 'Ebook Business',
-    tagline: 'Write once, earn repeatedly with digital books.',
-    desc: 'Package your knowledge or curated research into ebooks and digital guides. Low overhead, no inventory, and the product earns while you sleep.',
+  'ebook': {
+    title: 'Ebook Business Path',
+    tagline: 'Create once. Sell forever. Zero inventory.',
+    description: 'Create and publish books, guides, templates, and digital products using AI. Zero shipping, zero inventory — your product earns revenue around the clock while you sleep.',
     icon: BookOpen,
-    color: 'text-orange-600',
-    bg: 'bg-orange-50',
-    border: 'border-orange-200',
-    accent: '#EA580C',
-    accentLight: '#FFF7ED',
-    box: 'Ebook Business Box',
+    accent: '#D97706',
+    accentBg: '#FFFBEB',
+    textColor: 'text-amber-600',
     income: '$1,500 – $8,000/mo',
     timeline: '2–3 weeks to first sale',
-    difficulty: 'Beginner Friendly',
+    level: 'Beginner Friendly',
     highlights: [
-      'Zero inventory or shipping',
-      'Earn passively while you sleep',
-      'AI dramatically speeds up writing',
-      'Start with under $50',
+      'Zero inventory or shipping costs',
+      'Earn passively once published',
+      'AI cuts writing time dramatically',
+      'Launch for under $50',
     ],
   },
-  {
-    key: 'travel',
-    title: 'Travel Planner Business',
-    tagline: 'Turn travel knowledge into a planning service or content brand.',
-    desc: 'Monetize a love of travel or local expertise as a planning service, digital product brand, or content channel. Lifestyle-friendly with multiple income streams.',
+  'travel': {
+    title: 'Travel Planner Business Path',
+    tagline: 'Monetize a passion for travel into real income.',
+    description: 'Launch an AI-assisted travel planning service. Turn destination knowledge and planning skills into a profitable service, digital product brand, or content channel with multiple income streams.',
     icon: MapPin,
-    color: 'text-sky-600',
-    bg: 'bg-sky-50',
-    border: 'border-sky-200',
     accent: '#0284C7',
-    accentLight: '#F0F9FF',
-    box: 'Travel Planner Box',
+    accentBg: '#F0F9FF',
+    textColor: 'text-sky-600',
     income: '$1,000 – $6,000/mo',
     timeline: '4–6 weeks to first income',
-    difficulty: 'Beginner Friendly',
+    level: 'Beginner Friendly',
     highlights: [
       'Lifestyle-first business model',
-      'Multiple monetization streams',
-      'Pairs well with social content',
+      'Multiple income streams available',
+      'Pairs naturally with social content',
       'Low startup cost',
     ],
   },
-  {
-    key: 'affiliate',
-    title: 'Affiliate & Content Business',
-    tagline: 'Earn commissions by creating content that ranks and converts.',
-    desc: 'Build a niche blog, YouTube channel, or social brand that earns affiliate commissions and ad revenue. Compound growth — the more content you create, the more you earn, forever.',
+  'affiliate': {
+    title: 'Affiliate & Content Business Path',
+    tagline: 'Build once. Earn forever. No client work required.',
+    description: 'Build an audience and monetize through affiliate marketing and digital content. Create a niche blog, YouTube channel, or social brand that earns commissions and ad revenue — compounding over time.',
     icon: Megaphone,
-    color: 'text-rose-600',
-    bg: 'bg-rose-50',
-    border: 'border-rose-200',
-    accent: '#E11D48',
-    accentLight: '#FFF1F2',
-    box: 'Affiliate Content Box',
+    accent: '#DC2626',
+    accentBg: '#FEF2F2',
+    textColor: 'text-red-600',
     income: '$500 – $8,000/mo',
     timeline: '6–10 weeks to first commission',
-    difficulty: 'Beginner Friendly',
+    level: 'Beginner Friendly',
     highlights: [
       'Fully passive once content ranks',
-      'AI speeds up content creation 10x',
-      'No client work ever required',
-      'Scales without extra hours',
+      'AI accelerates content creation 10x',
+      'No client work — ever',
+      'Scales without additional hours',
     ],
   },
-];
+};
 
-// ─── Scoring ────────────────────────────────────────────────────────────────
+// ─── Scoring ──────────────────────────────────────────────────────────────────
 
 type Answers = Record<string, string>;
 
-function pickResult(a: Answers): number {
-  // scores: [ai-agency, contractor, ebook, travel, affiliate]
-  const s = [0, 0, 0, 0, 0];
+function score(a: Answers): PathKey {
+  const s: Record<PathKey, number> = {
+    'ai-agency': 0, contractor: 0, ebook: 0, travel: 0, affiliate: 0,
+  };
 
-  if (a.goal === 'learn-ai')     { s[0] += 3; s[1] += 1; }
-  if (a.goal === 'replace')      { s[0] += 2; s[1] += 2; }
-  if (a.goal === 'scale')        { s[0] += 2; s[1] += 1; s[3] += 1; }
-  if (a.goal === 'side-income')  { s[2] += 2; s[4] += 2; s[3] += 1; }
+  // goal
+  if (a.goal === 'learn-ai')       { s['ai-agency'] += 3; s.contractor += 1; }
+  if (a.goal === 'side-income')    { s.ebook += 2; s.affiliate += 2; s.travel += 1; }
+  if (a.goal === 'full-business')  { s['ai-agency'] += 2; s.contractor += 2; }
+  if (a.goal === 'career-change')  { s.contractor += 2; s['ai-agency'] += 1; s.ebook += 1; }
 
-  if (a.budget === 'under-100')  { s[2] += 2; s[4] += 3; s[3] += 1; }
-  if (a.budget === '100-500')    { s[2] += 1; s[3] += 2; s[4] += 1; s[1] += 1; }
-  if (a.budget === '500-2000')   { s[0] += 1; s[1] += 3; s[2] += 1; }
-  if (a.budget === '2000-plus')  { s[0] += 3; s[1] += 1; }
+  // budget
+  if (a.budget === 'under-100')  { s.ebook += 3; s.affiliate += 3; }
+  if (a.budget === '100-500')    { s.affiliate += 2; s.travel += 1; s.ebook += 1; }
+  if (a.budget === '500-2000')   { s.contractor += 3; s['ai-agency'] += 1; }
+  if (a.budget === '2000-plus')  { s['ai-agency'] += 3; s.contractor += 1; }
 
-  if (a.time === 'under-5')      { s[2] += 2; s[4] += 2; s[3] += 1; }
-  if (a.time === '5-10')         { s[3] += 2; s[4] += 2; s[2] += 1; }
-  if (a.time === '10-20')        { s[1] += 2; s[0] += 1; s[4] += 1; }
-  if (a.time === 'full-time')    { s[0] += 3; s[1] += 2; }
+  // time
+  if (a.time === 'under-5')   { s.ebook += 2; s.affiliate += 2; }
+  if (a.time === '5-10')      { s.affiliate += 2; s.travel += 2; s.ebook += 1; }
+  if (a.time === '10-20')     { s.contractor += 2; s['ai-agency'] += 1; }
+  if (a.time === 'full-time') { s['ai-agency'] += 3; s.contractor += 2; }
 
-  if (a.interest === 'tech-ai')          { s[0] += 4; }
-  if (a.interest === 'design-web')       { s[1] += 4; s[0] += 1; }
-  if (a.interest === 'writing-content')  { s[2] += 2; s[3] += 2; s[4] += 3; }
-  if (a.interest === 'sales-marketing')  { s[0] += 2; s[1] += 2; }
-  if (a.interest === 'local-service')    { s[1] += 3; s[3] += 3; }
+  // interest
+  if (a.interest === 'helping-biz')    { s['ai-agency'] += 4; }
+  if (a.interest === 'building-sites') { s.contractor += 4; s['ai-agency'] += 1; }
+  if (a.interest === 'content')        { s.affiliate += 3; s.travel += 2; }
+  if (a.interest === 'digital-prod')   { s.ebook += 4; s.affiliate += 1; }
+  if (a.interest === 'travel')         { s.travel += 4; s.affiliate += 1; }
 
-  if (a.income_goal === '500')        { s[4] += 2; s[3] += 2; s[2] += 1; }
-  if (a.income_goal === '1000-3000')  { s[2] += 2; s[3] += 1; s[4] += 1; s[1] += 1; }
-  if (a.income_goal === '3000-10000') { s[0] += 1; s[1] += 3; }
-  if (a.income_goal === '10000-plus') { s[0] += 3; s[1] += 1; }
+  // income
+  if (a.income === '500')        { s.affiliate += 2; s.ebook += 2; s.travel += 1; }
+  if (a.income === '1000')       { s.travel += 2; s.ebook += 1; s.affiliate += 1; }
+  if (a.income === '5000')       { s.contractor += 2; s['ai-agency'] += 1; }
+  if (a.income === '10000-plus') { s['ai-agency'] += 3; s.contractor += 1; }
 
-  return s.indexOf(Math.max(...s));
+  const keys = Object.keys(s) as PathKey[];
+  return keys.reduce((best, k) => s[k] > s[best] ? k : best, keys[0]);
 }
 
-// ─── Component ──────────────────────────────────────────────────────────────
+// ─── Animation hook ───────────────────────────────────────────────────────────
 
-type FlowStep = 'quiz' | 'lead' | 'result';
-type LeadForm = { name: string; email: string; phone: string };
+function useSlide(dep: unknown) {
+  const [visible, setVisible] = useState(false);
+  const prev = useRef(dep);
+  useEffect(() => {
+    if (prev.current !== dep) {
+      setVisible(false);
+      const t = setTimeout(() => { setVisible(true); prev.current = dep; }, 50);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setVisible(true), 20);
+    return () => clearTimeout(t);
+  }, [dep]);
+  return visible;
+}
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function OptionCard({
+  label, desc, icon: Icon, selected, onClick,
+}: {
+  label: string; desc: string; icon: React.ElementType;
+  selected: boolean; onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`group w-full text-left flex items-center gap-4 px-5 py-4 rounded-xl border-2 transition-all duration-150 ${
+        selected
+          ? 'border-blue-500 bg-blue-50 shadow-sm shadow-blue-100'
+          : 'border-gray-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'
+      }`}
+    >
+      <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
+        selected ? 'bg-blue-100' : 'bg-gray-100 group-hover:bg-blue-100'
+      }`}>
+        <Icon className={`w-5 h-5 transition-colors ${selected ? 'text-blue-600' : 'text-gray-500 group-hover:text-blue-600'}`} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className={`font-bold text-sm leading-snug transition-colors ${selected ? 'text-blue-700' : 'text-gray-800 group-hover:text-blue-700'}`}>
+          {label}
+        </p>
+        <p className="text-xs text-gray-400 mt-0.5 truncate">{desc}</p>
+      </div>
+      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+        selected ? 'border-blue-500 bg-blue-500' : 'border-gray-300 group-hover:border-blue-400'
+      }`}>
+        {selected && <div className="w-2 h-2 bg-white rounded-full" />}
+      </div>
+    </button>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+
+type Screen = 'hero' | 'quiz' | 'lead' | 'result';
 
 export default function StartPage({ onNavigate }: StartPageProps) {
-  const [flowStep, setFlowStep] = useState<FlowStep>('quiz');
-  const [currentQ, setCurrentQ] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
-  const [leadForm, setLeadForm] = useState<LeadForm>({ name: '', email: '', phone: '' });
-  const [errors, setErrors] = useState<Partial<LeadForm>>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [resultIndex, setResultIndex] = useState(0);
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [screen, setScreen]         = useState<Screen>('hero');
+  const [step, setStep]             = useState(0);
+  const [answers, setAnswers]       = useState<Answers>({});
+  const [selected, setSelected]     = useState<string | null>(null);
+  const [firstName, setFirstName]   = useState('');
+  const [email, setEmail]           = useState('');
+  const [firstNameErr, setFirstNameErr] = useState('');
+  const [emailErr, setEmailErr]     = useState('');
+  const [result, setResult]         = useState<PathKey | null>(null);
+
+  const slideKey = `${screen}-${step}`;
+  const visible  = useSlide(slideKey);
 
   const nav = (page: string) => {
     onNavigate(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleAnswer = (qId: string, value: string) => {
-    const updated = { ...answers, [qId]: value };
+  const startQuiz = () => {
+    setScreen('quiz');
+    setStep(0);
+    setSelected(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNext = () => {
+    if (!selected) return;
+    const q = QUESTIONS[step];
+    const updated = { ...answers, [q.id]: selected };
     setAnswers(updated);
-    if (currentQ < questions.length - 1) {
-      setCurrentQ((q) => q + 1);
+    setSelected(null);
+
+    if (step < QUESTIONS.length - 1) {
+      setStep((s) => s + 1);
     } else {
-      const idx = pickResult(updated);
-      setResultIndex(idx);
-      setSelectedTab(idx);
-      setFlowStep('lead');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setScreen('lead');
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBack = () => {
-    if (currentQ > 0) setCurrentQ((q) => q - 1);
+    if (step === 0) { setScreen('hero'); return; }
+    const prevAnswers = { ...answers };
+    const prevQ = QUESTIONS[step - 1];
+    setSelected(prevAnswers[prevQ.id] ?? null);
+    setStep((s) => s - 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const validate = (): boolean => {
-    const e: Partial<LeadForm> = {};
-    if (!leadForm.name.trim()) e.name = 'Name is required';
-    if (!leadForm.email.trim()) {
-      e.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(leadForm.email)) {
-      e.email = 'Enter a valid email address';
-    }
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
-
-  const handleLeadSubmit = async (e: React.FormEvent) => {
+  const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
-    setSubmitting(true);
-    await supabase.from('quiz_leads').insert({
-      name: leadForm.name.trim(),
-      email: leadForm.email.trim(),
-      phone: leadForm.phone.trim() || null,
-      goal: answers.goal ?? null,
-      budget: answers.budget ?? null,
-      available_time: answers.time ?? null,
-      interest: answers.interest ?? null,
-      income_goal: answers.income_goal ?? null,
-      recommended_result: results[resultIndex].key,
-    });
-    setSubmitting(false);
-    setFlowStep('result');
+    let ok = true;
+    if (!firstName.trim()) { setFirstNameErr('First name is required'); ok = false; } else setFirstNameErr('');
+    if (!email.trim()) {
+      setEmailErr('Email is required'); ok = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailErr('Please enter a valid email address'); ok = false;
+    } else {
+      setEmailErr('');
+    }
+    if (!ok) return;
+    setResult(score(answers));
+    setScreen('result');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const reset = () => {
-    setFlowStep('quiz');
-    setCurrentQ(0);
+  const resetQuiz = () => {
+    setScreen('hero');
+    setStep(0);
     setAnswers({});
-    setLeadForm({ name: '', email: '', phone: '' });
-    setErrors({});
+    setSelected(null);
+    setFirstName('');
+    setEmail('');
+    setFirstNameErr('');
+    setEmailErr('');
+    setResult(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const progress =
-    flowStep === 'quiz' ? Math.round((currentQ / questions.length) * 100) :
-    flowStep === 'lead' ? 92 : 100;
+  const progress = screen === 'hero'
+    ? 0
+    : screen === 'quiz'
+    ? Math.round(((step + 1) / (QUESTIONS.length + 2)) * 100)
+    : screen === 'lead'
+    ? Math.round(((QUESTIONS.length + 1) / (QUESTIONS.length + 2)) * 100)
+    : 100;
 
-  const topResult = results[resultIndex];
-  const TopIcon = topResult.icon;
-  const tabResult = results[selectedTab];
-  const TabIcon = tabResult.icon;
+  const slideClass = `transition-all duration-500 ease-out ${
+    visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+  }`;
 
   return (
-    <div className="pt-16 bg-gray-50 min-h-screen">
+    <div className="pt-16 min-h-screen bg-gray-50">
 
-      {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <section className="relative bg-white border-b border-gray-100 overflow-hidden">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0)',
-            backgroundSize: '28px 28px',
-          }}
-        />
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[420px] pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(37,99,235,0.09) 0%, transparent 70%)' }}
-        />
-        <div className="relative max-w-3xl mx-auto px-6 sm:px-8 pt-16 pb-16 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-black uppercase tracking-widest mb-7">
-            <Sparkles className="w-3.5 h-3.5" />
-            Free Business Launch Quiz
-          </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-black text-gray-950 leading-[1.07] tracking-tight mb-5">
-            Find Your Best Online<br />
-            <span className="text-blue-600">Business Model</span>
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto leading-relaxed mb-8">
-            Answer 5 quick questions and get a personalized recommendation —
-            built for beginners and aspiring AI entrepreneurs.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-400 font-medium">
-            {[
-              { icon: CheckCircle, text: 'Takes under 2 minutes' },
-              { icon: CheckCircle, text: '100% free — no credit card' },
-              { icon: CheckCircle, text: '3,200+ students launched' },
-            ].map(({ icon: Icon, text }) => (
-              <span key={text} className="flex items-center gap-1.5">
-                <Icon className="w-3.5 h-3.5 text-emerald-500" />
-                {text}
-              </span>
-            ))}
-          </div>
+      {/* ── PROGRESS BAR ─────────────────────────────────────────────────── */}
+      {screen !== 'hero' && (
+        <div className="fixed top-16 left-0 right-0 z-40 h-1 bg-gray-200">
+          <div
+            className="h-full bg-blue-600 transition-all duration-500 ease-out"
+            style={{ width: `${progress}%` }}
+          />
         </div>
-      </section>
+      )}
 
-      {/* ── CARD AREA ───────────────────────────────────────────────────── */}
-      <section className="py-12">
-        <div className="max-w-2xl mx-auto px-5 sm:px-6">
-
-          {/* Progress */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                {flowStep === 'quiz'
-                  ? `Question ${currentQ + 1} of ${questions.length}`
-                  : flowStep === 'lead'
-                  ? 'One last step — your results are ready'
-                  : 'Your Personalized Roadmap'}
-              </span>
-              <span className="text-xs font-black text-blue-600 tabular-nums">{progress}%</span>
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* HERO                                                                */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {screen === 'hero' && (
+        <div className={slideClass}>
+          {/* Hero banner */}
+          <section className="relative bg-white border-b border-gray-100 overflow-hidden">
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: 'radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0)',
+                backgroundSize: '28px 28px',
+              }}
+            />
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'radial-gradient(ellipse 800px 500px at 50% -80px, rgba(37,99,235,0.10) 0%, transparent 70%)',
+              }}
+            />
+            <div className="relative max-w-4xl mx-auto px-6 sm:px-8 pt-16 pb-20 text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold uppercase tracking-widest mb-8">
+                <Sparkles className="w-3.5 h-3.5" />
+                Business Launch Quiz — Free
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 leading-[1.05] tracking-tight mb-6">
+                Find The Best Online<br />
+                <span className="text-blue-600">Business For You</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto leading-relaxed mb-10">
+                Answer a few questions and receive a personalized roadmap to help you
+                learn AI, start a business, and create income online.
+              </p>
+              <button
+                onClick={startQuiz}
+                className="inline-flex items-center gap-3 px-10 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-lg rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/30 hover:shadow-blue-600/45 hover:-translate-y-0.5"
+              >
+                Start Quiz
+                <ArrowRight className="w-5 h-5" />
+              </button>
+              <p className="text-sm text-gray-400 mt-4">Takes less than 2 minutes &nbsp;·&nbsp; 100% free</p>
             </div>
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
+          </section>
 
-          {/* ── QUIZ STEP ── */}
-          {flowStep === 'quiz' && (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              {/* Step breadcrumb tabs */}
-              <div className="grid grid-cols-5 border-b border-gray-100">
-                {questions.map((q, i) => (
-                  <div
-                    key={q.id}
-                    className={`py-2.5 text-center text-[10px] font-black uppercase tracking-wider transition-colors ${
-                      i < currentQ
-                        ? 'bg-blue-600 text-white'
-                        : i === currentQ
-                        ? 'bg-blue-50 text-blue-600'
-                        : 'text-gray-300'
-                    }`}
-                  >
-                    {q.label}
+          {/* Trust + proof */}
+          <section className="py-14">
+            <div className="max-w-4xl mx-auto px-6 sm:px-8">
+              {/* Stats */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
+                {[
+                  { value: '3,200+', label: 'Students Matched' },
+                  { value: '5',      label: 'Business Paths' },
+                  { value: '42',     label: 'Countries' },
+                  { value: '$2,800', label: 'Avg Monthly Income' },
+                ].map((s) => (
+                  <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-5 text-center">
+                    <p className="text-2xl font-black text-blue-600 mb-1">{s.value}</p>
+                    <p className="text-xs text-gray-500 font-semibold">{s.label}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="p-7 sm:p-10">
-                <div className="flex items-center justify-between mb-6">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest bg-blue-50 text-blue-600">
-                    <Target className="w-3 h-3" />
-                    Step {questions[currentQ].step}
-                  </span>
-                  {currentQ > 0 && (
-                    <button
-                      onClick={handleBack}
-                      className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      Back
-                    </button>
+              {/* Path preview cards */}
+              <h2 className="text-xl font-black text-gray-950 text-center mb-6">
+                Which path will be yours?
+              </h2>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+                {(Object.entries(PATHS) as [PathKey, typeof PATHS[PathKey]][]).map(([key, p]) => {
+                  const Icon = p.icon;
+                  return (
+                    <div key={key} className="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: p.accentBg }}>
+                        <Icon className={`w-5 h-5 ${p.textColor}`} />
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900 text-sm leading-snug">{p.title}</p>
+                        <p className="text-xs text-gray-400 mt-1 leading-relaxed">{p.tagline}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Testimonial */}
+              <div className="bg-white rounded-2xl border border-gray-100 p-7 text-center max-w-xl mx-auto">
+                <div className="flex justify-center gap-0.5 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" />
+                  ))}
+                </div>
+                <p className="text-gray-700 text-sm italic leading-relaxed mb-4">
+                  "I had zero experience and launched my AI agency in 3 weeks. This quiz pointed me
+                  in exactly the right direction."
+                </p>
+                <p className="text-xs font-bold text-gray-500">
+                  Marcus T. &nbsp;·&nbsp; Former Teacher &nbsp;·&nbsp; Now earning $4,200/mo
+                </p>
+              </div>
+
+              {/* Bottom CTA */}
+              <div className="text-center mt-10">
+                <button
+                  onClick={startQuiz}
+                  className="inline-flex items-center gap-2.5 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/25 hover:-translate-y-0.5"
+                >
+                  Start My Free Quiz
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* QUIZ                                                                */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {screen === 'quiz' && (
+        <div className={`max-w-lg mx-auto px-5 sm:px-6 py-10 ${slideClass}`}>
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </button>
+            <span className="text-xs font-bold text-gray-400 tabular-nums">
+              {step + 1} of {QUESTIONS.length}
+            </span>
+          </div>
+
+          {/* Card */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            {/* Step dots */}
+            <div className="flex gap-1.5 px-7 pt-7">
+              {QUESTIONS.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+                    i < step ? 'bg-blue-600' : i === step ? 'bg-blue-400' : 'bg-gray-200'
+                  }`}
+                />
+              ))}
+            </div>
+
+            <div className="px-7 pt-6 pb-7">
+              <p className="text-[11px] font-black text-blue-600 uppercase tracking-widest mb-2">
+                Question {step + 1}
+              </p>
+              <h2 className="text-xl sm:text-2xl font-black text-gray-950 leading-snug mb-6">
+                {QUESTIONS[step].question}
+              </h2>
+
+              <div className="space-y-2.5">
+                {QUESTIONS[step].options.map((opt) => (
+                  <OptionCard
+                    key={opt.value}
+                    label={opt.label}
+                    desc={opt.desc}
+                    icon={opt.icon}
+                    selected={selected === opt.value}
+                    onClick={() => setSelected(opt.value)}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={handleNext}
+                disabled={!selected}
+                className="mt-6 w-full flex items-center justify-center gap-2 py-3.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 text-white font-black rounded-xl transition-all duration-200 disabled:cursor-not-allowed shadow-md shadow-blue-600/20 disabled:shadow-none hover:-translate-y-0.5 disabled:translate-y-0"
+              >
+                {step < QUESTIONS.length - 1 ? (
+                  <>Next Question <ArrowRight className="w-4 h-4" /></>
+                ) : (
+                  <>See My Results <ArrowRight className="w-4 h-4" /></>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* LEAD CAPTURE                                                        */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {screen === 'lead' && (
+        <div className={`max-w-lg mx-auto px-5 sm:px-6 py-10 ${slideClass}`}>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            {/* Banner */}
+            <div className="relative bg-blue-600 px-7 py-9 text-center overflow-hidden">
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'radial-gradient(ellipse at 50% -30%, rgba(255,255,255,0.15) 0%, transparent 60%)' }}
+              />
+              <div className="relative">
+                <div className="inline-flex w-14 h-14 rounded-2xl bg-white/20 items-center justify-center mb-4">
+                  <Zap className="w-7 h-7 text-white" fill="currentColor" />
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-2">
+                  Get Your Personalized<br />Business Roadmap
+                </h2>
+                <p className="text-blue-100 text-sm">
+                  Enter your information to see your recommended business path.
+                </p>
+              </div>
+            </div>
+
+            <div className="px-7 py-7">
+              <form onSubmit={handleLeadSubmit} noValidate className="space-y-4">
+                {/* First Name */}
+                <div>
+                  <label className="block text-xs font-black text-gray-600 uppercase tracking-wide mb-1.5">
+                    First Name
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="Jane"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className={`w-full pl-10 pr-4 py-3.5 rounded-xl border text-sm font-medium outline-none transition-all ${
+                        firstNameErr
+                          ? 'border-red-400 bg-red-50 focus:ring-2 focus:ring-red-500/15'
+                          : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
+                      }`}
+                    />
+                  </div>
+                  {firstNameErr && (
+                    <p className="text-xs text-red-500 mt-1.5 font-semibold">{firstNameErr}</p>
                   )}
                 </div>
 
-                <h2 className="text-2xl sm:text-3xl font-black text-gray-950 leading-tight mb-2">
-                  {questions[currentQ].question}
-                </h2>
-                <p className="text-sm text-gray-500 mb-8">{questions[currentQ].subtitle}</p>
-
-                <div className="space-y-3">
-                  {questions[currentQ].options.map((opt) => {
-                    const Icon = opt.icon;
-                    return (
-                      <button
-                        key={opt.value}
-                        onClick={() => handleAnswer(questions[currentQ].id, opt.value)}
-                        className="group w-full text-left px-5 py-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50/60 transition-all duration-150 flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-blue-100 flex items-center justify-center flex-shrink-0 transition-colors">
-                            <Icon className="w-5 h-5 text-gray-500 group-hover:text-blue-600 transition-colors" />
-                          </div>
-                          <div>
-                            <p className="font-bold text-gray-800 group-hover:text-blue-700 text-sm leading-snug transition-colors">
-                              {opt.label}
-                            </p>
-                            <p className="text-xs text-gray-400 mt-0.5">{opt.desc}</p>
-                          </div>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors flex-shrink-0 ml-3" />
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── LEAD CAPTURE ── */}
-          {flowStep === 'lead' && (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              {/* Result teaser banner */}
-              <div
-                className="px-8 py-9 text-center"
-                style={{
-                  background: `linear-gradient(145deg, ${topResult.accent} 0%, ${topResult.accent}bb 100%)`,
-                }}
-              >
-                <div className="inline-flex w-16 h-16 rounded-2xl items-center justify-center mb-4" style={{ background: 'rgba(255,255,255,0.2)' }}>
-                  <TopIcon className="w-8 h-8 text-white" />
-                </div>
-                <p className="text-white/70 text-xs font-black uppercase tracking-widest mb-2">
-                  Your result is ready
-                </p>
-                <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-                  {topResult.title}
-                </h2>
-                <p className="text-white/75 text-sm mt-2">
-                  {topResult.income} potential &nbsp;·&nbsp; {topResult.timeline}
-                </p>
-              </div>
-
-              <div className="p-7 sm:p-10">
-                <div className="text-center mb-7">
-                  <h3 className="text-xl font-black text-gray-950 mb-2">
-                    Where should we send your roadmap?
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    Enter your details to unlock your personalized plan. No spam, ever.
-                  </p>
+                {/* Email */}
+                <div>
+                  <label className="block text-xs font-black text-gray-600 uppercase tracking-wide mb-1.5">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    <input
+                      type="email"
+                      placeholder="jane@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={`w-full pl-10 pr-4 py-3.5 rounded-xl border text-sm font-medium outline-none transition-all ${
+                        emailErr
+                          ? 'border-red-400 bg-red-50 focus:ring-2 focus:ring-red-500/15'
+                          : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
+                      }`}
+                    />
+                  </div>
+                  {emailErr && (
+                    <p className="text-xs text-red-500 mt-1.5 font-semibold">{emailErr}</p>
+                  )}
                 </div>
 
-                <form onSubmit={handleLeadSubmit} noValidate className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-black text-gray-600 uppercase tracking-wide mb-1.5">
-                      Full Name
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                      <input
-                        type="text"
-                        placeholder="Jane Smith"
-                        value={leadForm.name}
-                        onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
-                        className={`w-full pl-10 pr-4 py-3.5 rounded-xl border text-sm font-medium outline-none transition-all ${
-                          errors.name
-                            ? 'border-red-400 bg-red-50 focus:border-red-400 focus:ring-2 focus:ring-red-500/15'
-                            : 'border-gray-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
-                        }`}
-                      />
-                    </div>
-                    {errors.name && <p className="text-xs text-red-500 mt-1.5 font-semibold">{errors.name}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-black text-gray-600 uppercase tracking-wide mb-1.5">
-                      Email Address
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                      <input
-                        type="email"
-                        placeholder="jane@example.com"
-                        value={leadForm.email}
-                        onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
-                        className={`w-full pl-10 pr-4 py-3.5 rounded-xl border text-sm font-medium outline-none transition-all ${
-                          errors.email
-                            ? 'border-red-400 bg-red-50 focus:border-red-400 focus:ring-2 focus:ring-red-500/15'
-                            : 'border-gray-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
-                        }`}
-                      />
-                    </div>
-                    {errors.email && <p className="text-xs text-red-500 mt-1.5 font-semibold">{errors.email}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-black text-gray-600 uppercase tracking-wide mb-1.5">
-                      Phone{' '}
-                      <span className="text-gray-400 normal-case font-normal text-xs">(optional)</span>
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                      <input
-                        type="tel"
-                        placeholder="+1 (555) 000-0000"
-                        value={leadForm.phone}
-                        onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
-                        className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm font-medium outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pt-1">
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="w-full flex items-center justify-center gap-2.5 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-black text-base rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-0.5 disabled:translate-y-0 disabled:shadow-none"
-                    >
-                      {submitting ? (
-                        <>
-                          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          Preparing your roadmap...
-                        </>
-                      ) : (
-                        <>
-                          Show My Results
-                          <ArrowRight className="w-5 h-5" />
-                        </>
-                      )}
-                    </button>
-                  </div>
-                  <p className="text-center text-xs text-gray-400">
-                    No spam. Unsubscribe anytime. We respect your privacy.
-                  </p>
-                </form>
-              </div>
-            </div>
-          )}
-
-          {/* ── RESULTS ── */}
-          {flowStep === 'result' && (
-            <div className="space-y-5">
-
-              {/* Top match card */}
-              <div className="bg-white rounded-2xl shadow-sm overflow-hidden border-2" style={{ borderColor: topResult.accent }}>
-                <div
-                  className="relative px-8 py-10 text-center overflow-hidden"
-                  style={{ background: `linear-gradient(145deg, ${topResult.accentLight} 0%, white 100%)` }}
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center gap-2.5 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-base rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/25 hover:shadow-blue-600/35 hover:-translate-y-0.5 mt-2"
                 >
-                  <div
-                    className="absolute top-0 right-0 w-56 h-56 rounded-full pointer-events-none"
-                    style={{ background: `radial-gradient(circle, ${topResult.accent}18 0%, transparent 70%)`, transform: 'translate(35%, -35%)' }}
-                  />
+                  Show My Results
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+
+                <p className="text-center text-xs text-gray-400">
+                  No spam. Unsubscribe anytime. We respect your privacy.
+                </p>
+              </form>
+
+              <button
+                onClick={() => setScreen('quiz')}
+                className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mt-4 mx-auto"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                Go back to quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* RESULT                                                              */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {screen === 'result' && result && (() => {
+        const path = PATHS[result];
+        const PathIcon = path.icon;
+        return (
+          <div className={`max-w-2xl mx-auto px-5 sm:px-6 py-10 space-y-5 ${slideClass}`}>
+
+            {/* ── Recommended path card ── */}
+            <div className="bg-white rounded-2xl overflow-hidden border-2" style={{ borderColor: path.accent }}>
+              {/* Top banner */}
+              <div
+                className="relative px-7 py-10 text-center overflow-hidden"
+                style={{ background: `linear-gradient(160deg, ${path.accentBg} 0%, white 65%)` }}
+              >
+                <div
+                  className="absolute top-0 right-0 w-64 h-64 pointer-events-none"
+                  style={{
+                    background: `radial-gradient(circle, ${path.accent}15 0%, transparent 65%)`,
+                    transform: 'translate(30%, -30%)',
+                  }}
+                />
+                <div className="relative">
                   <div
                     className="inline-flex w-16 h-16 rounded-2xl items-center justify-center mb-5"
-                    style={{ background: topResult.accentLight, boxShadow: `0 8px 24px ${topResult.accent}25` }}
+                    style={{ background: path.accentBg, boxShadow: `0 8px 24px ${path.accent}22` }}
                   >
-                    <TopIcon className={`w-8 h-8 ${topResult.color}`} />
+                    <PathIcon className={`w-8 h-8 ${path.textColor}`} />
                   </div>
-                  <div
-                    className="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-3"
-                    style={{ background: `${topResult.accent}15`, color: topResult.accent }}
+                  <span
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-3"
+                    style={{ background: `${path.accent}18`, color: path.accent }}
                   >
-                    Your #1 Match
-                  </div>
-                  <h2 className="text-3xl sm:text-4xl font-black text-gray-950 mb-2 leading-tight">
-                    {topResult.title}
+                    <CheckCircle className="w-3 h-3" />
+                    Your Recommended Path
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-black text-gray-950 leading-tight mb-2">
+                    {path.title}
                   </h2>
-                  <p className={`text-sm font-bold ${topResult.color} mb-4`}>{topResult.tagline}</p>
-                  <p className="text-gray-600 leading-relaxed max-w-md mx-auto text-sm">{topResult.desc}</p>
+                  <p className={`text-sm font-bold ${path.textColor} mb-4`}>{path.tagline}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed max-w-md mx-auto">
+                    {path.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Stats row */}
+              <div
+                className="grid grid-cols-3 text-center divide-x divide-gray-200"
+                style={{ background: path.accentBg }}
+              >
+                {[
+                  { label: 'Income Potential', value: path.income },
+                  { label: 'Time to Launch',   value: path.timeline },
+                  { label: 'Difficulty',       value: path.level },
+                ].map((s) => (
+                  <div key={s.label} className="py-4 px-3">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-wide mb-1">{s.label}</p>
+                    <p className={`text-xs font-black ${path.textColor} leading-snug`}>{s.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Highlights + CTAs */}
+              <div className="p-7 sm:p-8">
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">
+                  Why this path fits you
+                </p>
+                <div className="grid sm:grid-cols-2 gap-2.5 mb-8">
+                  {path.highlights.map((h) => (
+                    <div key={h} className="flex items-start gap-2.5 text-sm text-gray-700">
+                      <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                      {h}
+                    </div>
+                  ))}
                 </div>
 
-                <div className="p-7 sm:p-9">
-                  {/* Stats */}
-                  <div className="grid grid-cols-3 gap-3 rounded-xl p-4 mb-7 text-center" style={{ background: topResult.accentLight }}>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-wide mb-1">Income</p>
-                      <p className={`text-xs font-black ${topResult.color} leading-snug`}>{topResult.income}</p>
-                    </div>
-                    <div className="border-x border-gray-200/70">
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-wide mb-1">To Launch</p>
-                      <p className={`text-xs font-black ${topResult.color} leading-snug`}>{topResult.timeline}</p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-wide mb-1">Level</p>
-                      <p className={`text-xs font-black ${topResult.color} leading-snug`}>{topResult.difficulty}</p>
-                    </div>
-                  </div>
-
-                  {/* Highlights */}
-                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">What you get</h4>
-                  <div className="grid sm:grid-cols-2 gap-2 mb-8">
-                    {topResult.highlights.map((h) => (
-                      <div key={h} className="flex items-start gap-2.5 text-sm text-gray-700">
-                        <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                        {h}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* CTAs */}
+                {/* Ready for next step */}
+                <div className="border-t border-gray-100 pt-7">
+                  <h3 className="text-xl font-black text-gray-950 text-center mb-5">
+                    Ready For Your Next Step?
+                  </h3>
                   <div className="space-y-3">
                     <button
                       onClick={() => nav('book-call')}
                       className="w-full flex items-center justify-center gap-2.5 py-4 text-white font-black text-base rounded-xl transition-all duration-200 hover:-translate-y-0.5"
                       style={{
-                        background: `linear-gradient(135deg, ${topResult.accent} 0%, ${topResult.accent}cc 100%)`,
-                        boxShadow: `0 8px 28px ${topResult.accent}35`,
+                        background: `linear-gradient(135deg, ${path.accent} 0%, ${path.accent}cc 100%)`,
+                        boxShadow: `0 8px 28px ${path.accent}30`,
                       }}
                     >
                       <Phone className="w-4 h-4" />
-                      Book a Free Strategy Call
+                      Book A Free Strategy Call
                       <ArrowRight className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => nav('business-box')}
-                      className="w-full flex items-center justify-center gap-2 py-3.5 border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition-all duration-200"
+                      className="w-full flex items-center justify-center gap-2 py-3.5 border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-bold text-sm rounded-xl hover:bg-gray-50 transition-all"
                     >
-                      <Rocket className="w-4 h-4 text-blue-500" />
-                      Explore the {topResult.box}
+                      <LayoutGrid className="w-4 h-4 text-blue-500" />
+                      Explore Business-In-A-Box Systems
                     </button>
                   </div>
-
-                  <button
-                    onClick={reset}
-                    className="w-full mt-4 text-xs text-gray-400 hover:text-gray-600 transition-colors py-1"
-                  >
-                    Retake the quiz
-                  </button>
                 </div>
               </div>
+            </div>
 
-              {/* All 5 paths explorer */}
-              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                <div className="px-6 pt-6 pb-4 border-b border-gray-100">
-                  <h3 className="font-black text-gray-950 text-lg">Explore All 5 Business Paths</h3>
-                  <p className="text-sm text-gray-500 mt-0.5">See full details on every model before you decide.</p>
-                </div>
-
-                {/* Tabs */}
-                <div className="flex overflow-x-auto border-b border-gray-100">
-                  {results.map((r, i) => {
-                    const Icon = r.icon;
-                    return (
-                      <button
-                        key={r.key}
-                        onClick={() => setSelectedTab(i)}
-                        className={`flex items-center gap-1.5 px-4 py-3.5 text-[11px] font-bold whitespace-nowrap flex-shrink-0 border-b-2 transition-all ${
-                          selectedTab === i
-                            ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-                            : 'border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-50'
-                        }`}
+            {/* ── All paths overview ── */}
+            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+              <div className="px-6 pt-6 pb-4 border-b border-gray-100">
+                <h3 className="font-black text-gray-950 text-lg">All 5 Business Paths</h3>
+                <p className="text-sm text-gray-500 mt-0.5">Explore every option available to you.</p>
+              </div>
+              <div className="divide-y divide-gray-100">
+                {(Object.entries(PATHS) as [PathKey, typeof PATHS[PathKey]][]).map(([key, p]) => {
+                  const Icon = p.icon;
+                  const isMatch = key === result;
+                  return (
+                    <div key={key} className={`flex items-start gap-4 px-6 py-4 ${isMatch ? 'bg-blue-50/50' : ''}`}>
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
+                        style={{ background: p.accentBg }}
                       >
-                        <Icon className="w-3.5 h-3.5" />
-                        {r.title.split(' ').slice(0, 2).join(' ')}
-                        {i === resultIndex && (
-                          <span className="ml-1 px-1.5 py-0.5 bg-blue-600 text-white text-[8px] font-black rounded-full uppercase tracking-wide">
-                            Match
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Tab content */}
-                <div className="p-6">
-                  <div className="flex items-start gap-4 mb-5">
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{ background: tabResult.accentLight }}
-                    >
-                      <TabIcon className={`w-6 h-6 ${tabResult.color}`} />
-                    </div>
-                    <div>
-                      <h4 className="font-black text-gray-950 text-base leading-snug">{tabResult.title}</h4>
-                      <p className={`text-xs font-semibold ${tabResult.color} mt-0.5`}>{tabResult.tagline}</p>
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-gray-600 leading-relaxed mb-5">{tabResult.desc}</p>
-
-                  <div className="grid grid-cols-3 gap-3 rounded-xl p-4 mb-5 text-center" style={{ background: tabResult.accentLight }}>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-wide mb-0.5">Income</p>
-                      <p className={`text-xs font-black ${tabResult.color}`}>{tabResult.income}</p>
-                    </div>
-                    <div className="border-x border-gray-200/70">
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-wide mb-0.5">To Launch</p>
-                      <p className={`text-xs font-black ${tabResult.color}`}>{tabResult.timeline}</p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-wide mb-0.5">Level</p>
-                      <p className={`text-xs font-black ${tabResult.color}`}>{tabResult.difficulty}</p>
-                    </div>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 gap-2 mb-6">
-                    {tabResult.highlights.map((h) => (
-                      <div key={h} className="flex items-start gap-2 text-xs text-gray-600">
-                        <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                        {h}
+                        <Icon className={`w-5 h-5 ${p.textColor}`} />
                       </div>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => nav('book-call')}
-                    className="w-full flex items-center justify-center gap-2 py-3 text-sm font-black rounded-xl text-white transition-all duration-200 hover:-translate-y-0.5"
-                    style={{ background: tabResult.accent, boxShadow: `0 4px 16px ${tabResult.accent}30` }}
-                  >
-                    <Phone className="w-3.5 h-3.5" />
-                    Book a Free Strategy Call
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="font-bold text-gray-900 text-sm">{p.title}</p>
+                          {isMatch && (
+                            <span className="px-2 py-0.5 bg-blue-600 text-white text-[9px] font-black rounded-full uppercase tracking-wide">
+                              Your Match
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{p.description}</p>
+                        <p className={`text-xs font-bold ${p.textColor} mt-1.5`}>{p.income}</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-300 flex-shrink-0 mt-1" />
+                    </div>
+                  );
+                })}
               </div>
+            </div>
 
-              {/* Bottom CTA banner */}
-              <div className="bg-gray-950 rounded-2xl p-8 text-center">
-                <div className="inline-flex w-12 h-12 rounded-xl bg-blue-600 items-center justify-center mb-5 shadow-lg shadow-blue-600/30">
-                  <Phone className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-black text-white mb-2">Book a Free Strategy Call</h3>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-sm mx-auto mb-6">
-                  Spend 30 minutes with our team. We will map out your exact first steps, the tools
-                  you need, and a realistic timeline to launch.
-                </p>
+            {/* ── Bottom CTA banner ── */}
+            <div className="bg-gray-950 rounded-2xl p-8 sm:p-10 text-center">
+              <div className="inline-flex w-14 h-14 rounded-xl bg-blue-600 items-center justify-center mb-5 shadow-xl shadow-blue-600/30">
+                <Phone className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white mb-3">
+                Ready For Your Next Step?
+              </h3>
+              <p className="text-gray-400 text-sm leading-relaxed max-w-sm mx-auto mb-7">
+                Spend 30 minutes with our team. We will map out your exact first steps,
+                the right tools, and a realistic timeline to launch your business.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                   onClick={() => nav('book-call')}
-                  className="inline-flex items-center gap-2.5 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-0.5"
+                  className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/30 hover:-translate-y-0.5"
                 >
-                  Schedule My Free Call
-                  <ArrowRight className="w-4 h-4" />
+                  <Phone className="w-4 h-4" />
+                  Book A Free Strategy Call
                 </button>
-                <p className="text-gray-600 text-xs mt-4">No pressure. No sales pitch. Just a real plan.</p>
+                <button
+                  onClick={() => nav('business-box')}
+                  className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl transition-all duration-200 hover:-translate-y-0.5"
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                  Explore Business-In-A-Box Systems
+                </button>
               </div>
-
+              <button
+                onClick={resetQuiz}
+                className="inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-400 transition-colors mt-6"
+              >
+                <RefreshCw className="w-3 h-3" />
+                Retake the quiz
+              </button>
             </div>
-          )}
 
-        </div>
-      </section>
-
-      {/* ── SOCIAL PROOF (quiz + lead steps only) ───────────────────────── */}
-      {flowStep !== 'result' && (
-        <section className="pb-14">
-          <div className="max-w-2xl mx-auto px-5 sm:px-6">
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 text-center">
-              <div className="flex items-center justify-center gap-0.5 mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" />
-                ))}
-                <span className="text-sm font-black text-gray-900 ml-2">4.9 / 5.0</span>
-              </div>
-              <p className="text-sm text-gray-600 italic mb-4 max-w-md mx-auto">
-                "I had zero experience and launched my AI agency in 3 weeks. This quiz pointed me
-                in exactly the right direction."
-              </p>
-              <p className="text-xs font-bold text-gray-500">
-                — Marcus T., Former Teacher &nbsp;·&nbsp; Now earning $4,200/mo
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-gray-400 font-medium mt-5 pt-5 border-t border-gray-100">
-                {['3,200+ Students', '42 Countries', '$2,800 Avg Monthly Income', '6 Business Systems'].map((t) => (
-                  <span key={t} className="flex items-center gap-1.5">
-                    <Zap className="w-3 h-3 text-blue-400" />
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
-        </section>
-      )}
+        );
+      })()}
 
     </div>
   );
