@@ -1,23 +1,24 @@
 import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Zap } from 'lucide-react';
 
 interface NavbarProps {
-  currentPage: string;
   onNavigate: (page: string) => void;
 }
 
 const navLinks = [
-  { label: 'Home', page: 'home' },
-  { label: 'Start Here', page: 'start-here' },
-  { label: 'Business Launch Quiz', page: 'start' },
-  { label: 'Business-in-a-Box', page: 'business-box' },
-  { label: 'Tools', page: 'tools' },
-  { label: 'About', page: 'about' },
+  { label: 'Home',                  path: '/' },
+  { label: 'Start Here',            path: '/start' },
+  { label: 'Business Launch Quiz',  path: '/quiz' },
+  { label: 'Business-in-a-Box',     path: '/business-in-a-box' },
+  { label: 'Tools',                 path: '/tools' },
+  { label: 'About',                 path: '/about' },
 ];
 
-export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
+export default function Navbar({ onNavigate }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled]   = useState(false);
+  const { pathname }              = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -25,11 +26,11 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleNav = (page: string) => {
-    onNavigate(page);
-    setMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // Close mobile menu on route change
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
+
+  const isActive = (path: string) =>
+    path === '/' ? pathname === '/' : pathname.startsWith(path);
 
   return (
     <header
@@ -40,9 +41,10 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <button
-            onClick={() => handleNav('home')}
+          <Link
+            to="/"
             className="flex items-center gap-2 group"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center group-hover:bg-blue-700 transition-colors">
               <Zap className="w-5 h-5 text-white" fill="currentColor" />
@@ -50,33 +52,35 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             <span className="font-bold text-gray-900 text-lg leading-tight">
               Simple Online<span className="text-blue-600"> Steps</span>
             </span>
-          </button>
+          </Link>
 
-          {/* Desktop Nav */}
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <button
-                key={link.page}
-                onClick={() => handleNav(link.page)}
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  currentPage === link.page
+                  isActive(link.path)
                     ? 'text-blue-600 bg-blue-50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
                 {link.label}
-              </button>
+              </Link>
             ))}
           </nav>
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => handleNav('book-call')}
+            <Link
+              to="/book-a-call"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors shadow-sm"
             >
               Book a Free Call
-            </button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -90,7 +94,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
           menuOpen ? 'max-h-96 border-t border-gray-100' : 'max-h-0'
@@ -98,25 +102,27 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
       >
         <div className="bg-white px-4 py-3 space-y-1">
           {navLinks.map((link) => (
-            <button
-              key={link.page}
-              onClick={() => handleNav(link.page)}
-              className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${
-                currentPage === link.page
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className={`flex w-full px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                isActive(link.path)
                   ? 'text-blue-600 bg-blue-50'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               {link.label}
-            </button>
+            </Link>
           ))}
           <div className="pt-2 pb-1">
-            <button
-              onClick={() => handleNav('book-call')}
-              className="w-full px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            <Link
+              to="/book-a-call"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex w-full justify-center px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors"
             >
               Book a Free Call
-            </button>
+            </Link>
           </div>
         </div>
       </div>
