@@ -14,7 +14,6 @@ import {
   Building2,
   User,
   Mail,
-  Phone,
   ChevronRight,
   TrendingUp,
   Clock,
@@ -164,13 +163,13 @@ function pickResult(answers: Answers): number {
   return 0;
 }
 
-type LeadForm = { name: string; email: string; phone: string };
+type LeadForm = { name: string; email: string };
 
 export default function QuizPage({ onNavigate }: QuizPageProps) {
   const [step, setStep] = useState<'quiz' | 'lead' | 'result'>('quiz');
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
-  const [leadForm, setLeadForm] = useState<LeadForm>({ name: '', email: '', phone: '' });
+  const [leadForm, setLeadForm] = useState<LeadForm>({ name: '', email: '' });
   const [leadErrors, setLeadErrors] = useState<Partial<LeadForm>>({});
   const [submitting, setSubmitting] = useState(false);
   const [resultIndex, setResultIndex] = useState(0);
@@ -218,7 +217,6 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
     await supabase.from('quiz_leads').insert({
       name: leadForm.name.trim(),
       email: leadForm.email.trim(),
-      phone: leadForm.phone.trim() || null,
       goal: answers.goal ?? null,
       budget: answers.budget ?? null,
       available_time: answers.available_time ?? null,
@@ -235,7 +233,7 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
     setStep('quiz');
     setCurrentQ(0);
     setAnswers({});
-    setLeadForm({ name: '', email: '', phone: '' });
+    setLeadForm({ name: '', email: '' });
     setLeadErrors({});
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -370,10 +368,10 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
               <div className="p-8 sm:p-10">
                 <div className="mb-7 text-center">
                   <h3 className="text-xl font-black text-gray-950 mb-1.5">
-                    Where should we send your roadmap?
+                    Get Your Personalized Business Roadmap
                   </h3>
                   <p className="text-sm text-gray-500">
-                    Enter your details to unlock your personalized plan. No spam, ever.
+                    Enter your information to see your recommended business path.
                   </p>
                 </div>
 
@@ -381,13 +379,13 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
                   {/* Name */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Full Name
+                      First Name
                     </label>
                     <div className="relative">
                       <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <input
                         type="text"
-                        placeholder="Jane Smith"
+                        placeholder="Jane"
                         value={leadForm.name}
                         onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
                         className={`w-full pl-10 pr-4 py-3.5 rounded-xl border text-sm font-medium transition-colors outline-none focus:ring-2 focus:ring-blue-500/20 ${
@@ -426,23 +424,6 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
                     )}
                   </div>
 
-                  {/* Phone */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Phone <span className="text-gray-400 font-normal">(optional)</span>
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      <input
-                        type="tel"
-                        placeholder="+1 (555) 000-0000"
-                        value={leadForm.phone}
-                        onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
-                        className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm font-medium transition-colors outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                      />
-                    </div>
-                  </div>
-
                   <button
                     type="submit"
                     disabled={submitting}
@@ -451,7 +432,7 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
                     {submitting ? (
                       <>
                         <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                        Preparing your roadmap...
+                        Preparing your results...
                       </>
                     ) : (
                       <>
@@ -460,10 +441,6 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
                       </>
                     )}
                   </button>
-
-                  <p className="text-center text-xs text-gray-400 pt-1">
-                    No spam. Unsubscribe anytime. We respect your privacy.
-                  </p>
                 </form>
               </div>
             </div>
@@ -479,18 +456,24 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
                   <div className={`inline-flex w-16 h-16 rounded-2xl ${result.bg} items-center justify-center mb-5`}>
                     <ResultIcon className={`w-8 h-8 ${result.color}`} />
                   </div>
-                  <div className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-3" style={{ background: `${result.accent}15`, color: result.accent }}>
-                    Your Match
-                  </div>
-                  <h2 className="text-3xl sm:text-4xl font-black text-gray-950 mb-3 leading-tight">
-                    {result.title}
+                  <h2 className="text-2xl sm:text-3xl font-black text-gray-950 leading-tight mb-2">
+                    Your Personalized Business Recommendation Is Ready
                   </h2>
-                  <p className="text-gray-500 leading-relaxed max-w-md mx-auto">
-                    {result.desc}
+                  <p className="text-gray-500 text-sm leading-relaxed max-w-md mx-auto mb-5">
+                    Based on your answers, here is the best path for you to start learning AI and
+                    building an online business.
                   </p>
+                  <div className="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest" style={{ background: `${result.accent}15`, color: result.accent }}>
+                    {result.title}
+                  </div>
                 </div>
 
                 <div className="p-8">
+                  {/* Result description */}
+                  <p className="text-gray-600 text-sm leading-relaxed mb-6 text-center">
+                    {result.desc}
+                  </p>
+
                   {/* Stats row */}
                   <div className={`grid grid-cols-3 gap-4 rounded-xl p-5 mb-7 ${result.bg}`}>
                     <div className="text-center">
@@ -525,17 +508,17 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
                   {/* CTAs */}
                   <div className="space-y-3">
                     <button
-                      onClick={() => navigate(result.boxPage)}
+                      onClick={() => navigate('book-call')}
                       className="w-full flex items-center justify-center gap-2.5 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-0.5"
                     >
-                      View My Business System
+                      Book a Free Strategy Session
                       <ArrowRight className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => navigate('book-call')}
+                      onClick={() => navigate(result.boxPage)}
                       className="w-full py-3.5 border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200"
                     >
-                      Book a Free Strategy Call
+                      Explore Business-in-a-Box Systems
                     </button>
                   </div>
 
