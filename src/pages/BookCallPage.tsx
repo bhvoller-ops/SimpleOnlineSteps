@@ -5,46 +5,63 @@ import {
   Users,
   Star,
   Phone,
-  Calendar,
-  Sparkles,
+  Mail,
   LayoutGrid,
   Target,
+  Wrench,
+  AlertTriangle,
   ArrowRight,
+  Zap,
 } from 'lucide-react';
 
 // Set your Calendly event URL here to activate the live embed.
 // Example: "https://calendly.com/yourname/strategy-session"
 const CALENDLY_URL = '';
 
-const benefits = [
+const CASSEY_EMAIL = 'cassey@simpleonlinesteps.com';
+
+const whatWellCover = [
   {
-    icon: Sparkles,
-    title: 'Beginner-Friendly Guidance',
-    desc: 'No experience needed — we meet you exactly where you are.',
-  },
-  {
-    icon: Phone,
-    title: 'No Pressure',
-    desc: 'Zero sales tactics, zero obligation. Just honest conversation.',
+    icon: LayoutGrid,
+    title: 'Choosing the right AI business',
+    desc: 'We match your skills, schedule, and goals to the model most likely to work for you.',
+    color: 'text-blue-600',
+    bg: 'bg-blue-50',
   },
   {
     icon: Target,
-    title: 'Personalized Roadmap',
-    desc: 'Leave with a clear, custom action plan built for your goals.',
+    title: 'Creating your first offer',
+    desc: 'Build a clear, named, priced service you can confidently put in front of clients.',
+    color: 'text-emerald-600',
+    bg: 'bg-emerald-50',
   },
   {
-    icon: LayoutGrid,
-    title: 'Business-in-a-Box Recommendations',
-    desc: 'Discover which done-for-you system is the right fit for you.',
+    icon: Users,
+    title: 'Finding your first clients',
+    desc: 'Proven outreach approaches to land your first paying client — no cold calling required.',
+    color: 'text-orange-600',
+    bg: 'bg-orange-50',
+  },
+  {
+    icon: Wrench,
+    title: 'Building systems',
+    desc: 'The workflows and tools that let you deliver great results without working 24/7.',
+    color: 'text-violet-600',
+    bg: 'bg-violet-50',
+  },
+  {
+    icon: AlertTriangle,
+    title: 'Avoiding common mistakes',
+    desc: 'The pitfalls that slow most people down — and exactly how to sidestep them.',
+    color: 'text-rose-600',
+    bg: 'bg-rose-50',
   },
 ];
 
-const whatYouGet = [
-  'Identify the best business model for your situation',
-  'Get a custom 30-day action plan, step by step',
-  'Learn which AI tools to use and how',
-  'Ask any questions — nothing is too basic',
-  'Walk away with complete clarity and confidence',
+const callDetails = [
+  { icon: Clock, label: '30 Minutes', sub: 'Via Zoom or phone' },
+  { icon: Users, label: '1-on-1 Coaching', sub: 'Private, personalized session' },
+  { icon: Phone, label: 'No Sales Pressure', sub: 'Zero obligation, ever' },
 ];
 
 const faqs = [
@@ -54,19 +71,19 @@ const faqs = [
   },
   {
     q: 'Who will I be talking to?',
-    a: 'You will speak directly with one of our business coaches — a real entrepreneur who has built online income using these systems.',
+    a: 'You will speak directly with Cassey — a real entrepreneur who has built online income using these systems.',
   },
   {
     q: 'What if I have no business experience?',
-    a: 'Perfect — most of our students start with zero experience. The call is designed specifically to help beginners find their starting point.',
+    a: 'Perfect — most of our students start with zero experience. The session is designed specifically to help beginners find their starting point.',
   },
   {
-    q: 'How long is the call?',
-    a: 'We schedule 30 minutes, though many calls run a bit longer if needed. Come with questions — there are no dumb ones.',
+    q: 'How long is the session?',
+    a: 'We schedule 30 minutes, though many sessions run a bit longer if needed. Come with questions — there are no dumb ones.',
   },
   {
     q: 'Will I be pressured to buy anything?',
-    a: "Absolutely not. We hate pushy sales tactics. If there's a system that fits you, we'll tell you about it. If not, we'll still give you a clear next step.",
+    a: "Absolutely not. If there's a system that fits you, we'll tell you about it. If not, we'll still give you a clear next step.",
   },
 ];
 
@@ -88,49 +105,48 @@ export default function BookCallPage({ onNavigate: _onNavigate }: BookCallPagePr
             Free — No Obligation
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 leading-[1.05] tracking-tight mb-5">
-            Schedule Your Free<br />
+            Free AI Business<br />
             <span className="text-blue-600">Strategy Session</span>
           </h1>
-          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            Get personalized guidance on choosing and launching the right AI-powered business path.
+          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed mb-8">
+            Get personalized guidance on choosing the right AI business model, creating your offer, finding clients, and launching faster.
           </p>
-        </div>
-      </section>
-
-      {/* ── BENEFITS STRIP ── */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-8">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {benefits.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Icon className="w-4 h-4 text-blue-600" />
-                </div>
-                <div>
-                  <p className="font-bold text-gray-900 text-sm">{title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{desc}</p>
-                </div>
-              </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500 font-medium">
+            {['30 minutes · 1-on-1', 'No sales pressure', 'Personalized action plan'].map((t) => (
+              <span key={t} className="flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                {t}
+              </span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CALENDLY + SIDEBAR ── */}
+      {/* ── MAIN CONTENT ── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid lg:grid-cols-5 gap-10">
 
           {/* ── LEFT SIDEBAR ── */}
           <div className="lg:col-span-2 space-y-5">
 
-            {/* What you'll get */}
+            {/* What We'll Cover */}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-              <h3 className="font-black text-gray-900 text-base mb-4">What You'll Get</h3>
-              <ul className="space-y-3">
-                {whatYouGet.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-gray-600 leading-relaxed">
-                    <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    {item}
+              <div className="flex items-center gap-2 mb-5">
+                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                  <Zap className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="font-black text-gray-900 text-base">What We'll Cover</h3>
+              </div>
+              <ul className="space-y-4">
+                {whatWellCover.map(({ icon: Icon, title, desc, color, bg }) => (
+                  <li key={title} className="flex items-start gap-3">
+                    <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                      <Icon className={`w-4 h-4 ${color}`} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-900 text-sm leading-snug">{title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{desc}</p>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -138,29 +154,17 @@ export default function BookCallPage({ onNavigate: _onNavigate }: BookCallPagePr
 
             {/* Call details */}
             <div className="bg-blue-600 rounded-2xl p-6 text-white">
-              <h3 className="font-black text-base mb-4">Call Details</h3>
+              <h3 className="font-black text-base mb-4">Session Details</h3>
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-blue-200 flex-shrink-0" />
-                  <div>
-                    <p className="font-bold text-sm">30 Minutes</p>
-                    <p className="text-blue-200 text-xs">Via Zoom or phone</p>
+                {callDetails.map(({ icon: Icon, label, sub }) => (
+                  <div key={label} className="flex items-center gap-3">
+                    <Icon className="w-5 h-5 text-blue-200 flex-shrink-0" />
+                    <div>
+                      <p className="font-bold text-sm">{label}</p>
+                      <p className="text-blue-200 text-xs">{sub}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Users className="w-5 h-5 text-blue-200 flex-shrink-0" />
-                  <div>
-                    <p className="font-bold text-sm">1-on-1 Coaching</p>
-                    <p className="text-blue-200 text-xs">Private, personalized session</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 text-blue-200 flex-shrink-0" />
-                  <div>
-                    <p className="font-bold text-sm">No Sales Pressure</p>
-                    <p className="text-blue-200 text-xs">Zero obligation, ever</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -190,14 +194,14 @@ export default function BookCallPage({ onNavigate: _onNavigate }: BookCallPagePr
 
           </div>
 
-          {/* ── CALENDLY EMBED / PLACEHOLDER ── */}
+          {/* ── RIGHT: BOOKING PANEL ── */}
           <div className="lg:col-span-3">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
               {/* Card header */}
               <div className="px-7 pt-7 pb-5 border-b border-gray-100">
                 <h2 className="text-xl font-black text-gray-950 mb-1">
-                  Book My Free Strategy Call
+                  Schedule My Free Strategy Session
                 </h2>
                 <p className="text-sm text-gray-500">
                   Pick a time that works for you — it only takes 30 seconds.
@@ -205,7 +209,6 @@ export default function BookCallPage({ onNavigate: _onNavigate }: BookCallPagePr
               </div>
 
               {CALENDLY_URL ? (
-                /* Live embed once CALENDLY_URL is set */
                 <iframe
                   src={CALENDLY_URL}
                   title="Schedule a strategy session"
@@ -215,87 +218,61 @@ export default function BookCallPage({ onNavigate: _onNavigate }: BookCallPagePr
                   className="block"
                 />
               ) : (
-                /* Placeholder */
-                <div className="flex flex-col items-center justify-center gap-6 px-8 py-14 bg-gray-50">
+                /* Email CTA — shown until Calendly is connected */
+                <div className="flex flex-col items-center gap-7 px-8 py-14">
+
                   {/* Icon */}
                   <div className="w-20 h-20 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-sm">
-                    <Calendar className="w-10 h-10 text-blue-400" />
+                    <Mail className="w-10 h-10 text-blue-500" />
                   </div>
 
-                  {/* Text */}
+                  {/* Intro text */}
                   <div className="text-center max-w-sm">
-                    <p className="font-black text-gray-800 text-lg mb-2">
-                      Calendly scheduling calendar will be embedded here.
-                    </p>
+                    <h3 className="font-black text-gray-900 text-lg mb-2">
+                      Ready to get started?
+                    </h3>
                     <p className="text-gray-500 text-sm leading-relaxed">
-                      Once configured, visitors can pick a date and time directly
-                      on this page — no redirects.
+                      Send us an email and we'll reply with available times to book your free 1-on-1 strategy session.
                     </p>
                   </div>
 
-                  {/* Mock calendar */}
-                  <div className="w-full max-w-xs bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm select-none pointer-events-none">
-                    <div className="bg-blue-600 px-5 py-3 flex items-center justify-between">
-                      <span className="text-white font-bold text-sm">June 2026</span>
-                      <div className="flex gap-2">
-                        <span className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">‹</span>
-                        <span className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">›</span>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <div className="grid grid-cols-7 text-center mb-2">
-                        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-                          <span key={i} className="text-[10px] font-bold text-gray-400">{d}</span>
-                        ))}
-                      </div>
-                      <div className="grid grid-cols-7 text-center gap-y-1">
-                        {[...Array(30)].map((_, i) => {
-                          const day = i + 1;
-                          const available = [3, 5, 6, 10, 12, 13, 17, 19, 20, 24, 26, 27].includes(day);
-                          const selected  = day === 17;
-                          return (
-                            <span
-                              key={i}
-                              className={`text-xs py-1 rounded-full mx-auto w-6 h-6 flex items-center justify-center font-medium
-                                ${selected  ? 'bg-blue-600 text-white'              : ''}
-                                ${available && !selected ? 'text-blue-600 font-bold' : ''}
-                                ${!available && !selected ? 'text-gray-300'          : ''}
-                              `}
-                            >
-                              {day}
-                            </span>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    <div className="px-4 pb-4 space-y-2">
-                      {['9:00 AM', '10:30 AM', '2:00 PM'].map((t) => (
-                        <div
-                          key={t}
-                          className={`px-3 py-1.5 rounded-lg border text-xs font-semibold text-center ${
-                            t === '10:30 AM'
-                              ? 'bg-blue-600 text-white border-blue-600'
-                              : 'border-gray-200 text-gray-500'
-                          }`}
-                        >
-                          {t}
-                        </div>
+                  {/* What to include hint */}
+                  <div className="w-full max-w-sm bg-gray-50 border border-gray-100 rounded-xl p-5">
+                    <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-3">Include in your email</p>
+                    <ul className="space-y-2">
+                      {[
+                        'Your name and what you do currently',
+                        'Your biggest goal for the next 90 days',
+                        'The best time of day to connect',
+                      ].map((hint) => (
+                        <li key={hint} className="flex items-start gap-2 text-xs text-gray-600 leading-relaxed">
+                          <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                          {hint}
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
 
-                  {/* CTA */}
-                  <button
-                    disabled
-                    className="flex items-center gap-2.5 px-8 py-4 bg-blue-600 text-white font-bold rounded-xl opacity-50 cursor-not-allowed text-sm"
+                  {/* Primary CTA */}
+                  <a
+                    href={`mailto:${CASSEY_EMAIL}?subject=Free%20Strategy%20Session%20Request&body=Hi%20Cassey%2C%0A%0AI%27d%20love%20to%20book%20a%20free%20strategy%20session.%0A%0AMy%20name%3A%20%0AMy%20goal%3A%20%0ABest%20time%20to%20connect%3A%20`}
+                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 text-base"
                   >
-                    Book My Free Strategy Call
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                    <Mail className="w-5 h-5" />
+                    Email Cassey
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                  </a>
+
+                  {/* Trust statement */}
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    You'll receive a response within 1 business day.
+                  </div>
+
                 </div>
               )}
 
-              {/* Setup note — only shown in placeholder mode */}
+              {/* Setup note for Calendly — only shown in placeholder mode */}
               {!CALENDLY_URL && (
                 <div className="px-7 py-4 bg-amber-50 border-t border-amber-100">
                   <p className="text-xs text-amber-800 leading-relaxed">

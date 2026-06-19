@@ -326,6 +326,80 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
+      {/* ══ MOST POPULAR STARTING POINT ════════════════════════════════ */}
+      <section className="bg-white py-14 sm:py-16 border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+
+            {/* Image */}
+            <div className="w-full lg:w-2/5 flex-shrink-0">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl border border-gray-200/60">
+                <img
+                  src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  alt="AI Agency Launch Kit"
+                  className="w-full h-56 sm:h-64 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-transparent" />
+                <div className="absolute top-3 left-3">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-black rounded-full shadow-lg">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-200 animate-pulse" />
+                    Most Popular Starting Point
+                  </span>
+                </div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" />
+                    ))}
+                    <span className="text-white text-xs font-semibold ml-1">4.9</span>
+                  </div>
+                  <p className="text-white/80 text-xs">Joined by 1,400+ students</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 text-center lg:text-left">
+              <p className="text-xs font-black tracking-widest text-blue-600 uppercase mb-3">Most Popular Starting Point</p>
+              <h2 className="text-3xl sm:text-4xl font-black text-gray-950 leading-tight tracking-tight mb-4">
+                AI Agency Launch Kit
+              </h2>
+              <p className="text-lg text-gray-500 leading-relaxed mb-6 max-w-lg">
+                The fastest path from learning AI to landing your first client.
+              </p>
+
+              <ul className="space-y-2.5 mb-8 inline-flex flex-col items-start text-left">
+                {[
+                  '8 ready-to-use templates and scripts',
+                  '30-day first client acquisition roadmap',
+                  'Step-by-step — no experience needed',
+                  '14-day money-back guarantee',
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-2.5 text-sm text-gray-600 font-medium">
+                    <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3">
+                <a
+                  href="https://buy.stripe.com/bJe6oI8CUeKP4lWaozcZa00"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 text-base"
+                >
+                  Get The Launch Kit
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </a>
+                <p className="text-sm text-gray-400 self-center">$97 · One-time · Instant access</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* ══ 2. PROBLEM ═══════════════════════════════════════════════════ */}
       <section className="bg-white py-24 sm:py-28">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10">
