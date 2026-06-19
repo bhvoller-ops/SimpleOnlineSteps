@@ -799,7 +799,63 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
         </div>
       </section>
 
-      {/* ══ 9. FINAL CTA ═════════════════════════════════════════════════ */}
+      {/* ══ 9. WHY THIS WORKS ════════════════════════════════════════════ */}
+      <section className="bg-white py-24 border-b border-gray-100">
+        <div className="max-w-3xl mx-auto px-6 sm:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-black uppercase tracking-widest mb-5">
+              Why This Works
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-gray-950 leading-tight mb-4">
+              Built For Action, Not Theory
+            </h2>
+          </div>
+
+          <div className="bg-gray-950 rounded-3xl overflow-hidden">
+            <div className="px-8 py-10 sm:px-12">
+              <p className="text-gray-300 text-lg leading-relaxed mb-6">
+                The AI Agency Launch Kit is built around practical implementation, not theory.
+              </p>
+              <p className="text-gray-400 leading-relaxed mb-6">
+                The goal is not to learn more AI. Most people already have enough information to get started — what they're missing is a system that converts that knowledge into client conversations and paid work.
+              </p>
+              <p className="text-gray-400 leading-relaxed mb-10">
+                The goal is to help you <span className="text-white font-semibold">take action faster</span>. Every resource in the kit removes a specific obstacle between you and your first client — a blank proposal, an awkward sales call, a vague offer, no outreach plan.
+              </p>
+
+              <div className="grid sm:grid-cols-3 gap-4">
+                {[
+                  {
+                    title: 'Done-For-You Templates',
+                    desc: "You're not starting from blank. Every document is pre-built and ready to use the same day.",
+                    color: 'text-blue-400',
+                    bg: 'bg-blue-600/10 border-blue-500/20',
+                  },
+                  {
+                    title: 'One Clear System',
+                    desc: 'No conflicting advice from 12 different YouTube creators. One path, one direction, one outcome.',
+                    color: 'text-emerald-400',
+                    bg: 'bg-emerald-600/10 border-emerald-500/20',
+                  },
+                  {
+                    title: 'Designed for Beginners',
+                    desc: 'No experience, portfolio, or technical background required. Assumes you are starting from zero.',
+                    color: 'text-orange-400',
+                    bg: 'bg-orange-600/10 border-orange-500/20',
+                  },
+                ].map(({ title, desc, color, bg }) => (
+                  <div key={title} className={`rounded-2xl border ${bg} px-5 py-5`}>
+                    <h4 className={`font-black text-sm mb-2 leading-snug ${color}`}>{title}</h4>
+                    <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ 10. FINAL CTA ════════════════════════════════════════════════ */}
       <section className="bg-gray-950 py-24">
         <div className="max-w-3xl mx-auto px-6 sm:px-8 text-center">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600 shadow-xl shadow-blue-600/30 mb-8">

@@ -19,7 +19,7 @@ const steps = [
     n: '01',
     icon: Download,
     title: 'Access Your Downloads',
-    desc: 'All 8 resources from your AI Agency Launch Kit are ready. Open the download center, save everything to a folder, and you\'re ready to start.',
+    desc: "All 8 resources from your AI Agency Launch Kit are ready. Open the download center, save everything to a folder, and you're ready to start.",
     color: 'text-blue-600',
     iconBg: 'bg-blue-50',
     barColor: 'bg-blue-600',
@@ -39,7 +39,7 @@ const steps = [
     n: '03',
     icon: BookOpen,
     title: 'Start Building Your AI Business',
-    desc: 'Follow the roadmap one day at a time. Use the templates and scripts when you need them. The only way this works is by taking action consistently.',
+    desc: "Follow the roadmap one day at a time. Use the templates and scripts when you need them. The only way this works is by taking action consistently.",
     color: 'text-orange-600',
     iconBg: 'bg-orange-50',
     barColor: 'bg-orange-600',
@@ -62,7 +62,6 @@ export default function ThankYouLaunchKitPage({ onNavigate }: ThankYouLaunchKitP
         <div className="absolute inset-0 bg-[linear-gradient(to_right,_#ffffff03_1px,_transparent_1px),linear-gradient(to_bottom,_#ffffff03_1px,_transparent_1px)] bg-[size:56px_56px] pointer-events-none" />
 
         <div className="relative max-w-3xl mx-auto px-6 sm:px-8 pt-20 pb-24 text-center">
-          {/* Success icon */}
           <div className="relative inline-flex items-center justify-center mb-8">
             <div className="w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
               <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
@@ -87,8 +86,12 @@ export default function ThankYouLaunchKitPage({ onNavigate }: ThankYouLaunchKitP
           <p className="text-lg text-gray-300 leading-relaxed mb-4 max-w-xl mx-auto">
             Your purchase was successful and your resources are ready.
           </p>
+          <p className="text-gray-400 leading-relaxed max-w-xl mx-auto mb-3">
+            You're now ahead of most aspiring AI entrepreneurs — because you have a proven roadmap instead of random information.
+          </p>
           <p className="text-gray-400 leading-relaxed max-w-lg mx-auto mb-10">
-            You've made the most important move — from learning to action. Everything you need to land your first AI client is now in your hands.
+            Your next step is simple: access your downloads and begin with the{' '}
+            <span className="text-emerald-400 font-semibold">First Client Acquisition Roadmap</span>.
           </p>
 
           <div className="flex items-center justify-center gap-1 mb-2">
@@ -140,7 +143,6 @@ export default function ThankYouLaunchKitPage({ onNavigate }: ThankYouLaunchKitP
                   key={step.n}
                   className={`bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm ring-1 ${step.ringColor} hover:shadow-md transition-shadow duration-200`}
                 >
-                  {/* Accent bar */}
                   <div className={`h-0.5 ${step.barColor} opacity-70`} />
                   <div className="flex items-start gap-5 p-7">
                     <div className="flex flex-col items-center gap-2 flex-shrink-0">

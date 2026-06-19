@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   ArrowRight,
   CheckCircle,
@@ -17,7 +18,10 @@ import {
   ShoppingBag,
   Share2,
   Package,
+  Mail,
+  Loader2,
 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -216,6 +220,31 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   const navigate = (page: string) => {
     onNavigate(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const [subName, setSubName] = useState('');
+  const [subEmail, setSubEmail] = useState('');
+  const [subState, setSubState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [subError, setSubError] = useState('');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!subName.trim() || !subEmail.trim()) return;
+    setSubState('loading');
+    setSubError('');
+    const { error } = await supabase
+      .from('email_subscribers')
+      .insert({ name: subName.trim(), email: subEmail.trim().toLowerCase(), source: 'homepage' });
+    if (error) {
+      if (error.code === '23505') {
+        setSubState('success');
+      } else {
+        setSubError('Something went wrong. Please try again.');
+        setSubState('error');
+      }
+    } else {
+      setSubState('success');
+    }
   };
 
   return (
@@ -666,6 +695,69 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ══ EMAIL SIGNUP ════════════════════════════════════════════════ */}
+      <section className="bg-gray-950 py-20">
+        <div className="max-w-2xl mx-auto px-6 sm:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-black uppercase tracking-widest mb-6">
+            <Mail className="w-3.5 h-3.5" />
+            Free Weekly Tips
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
+            Get Weekly AI Business Tips
+          </h2>
+          <p className="text-gray-400 leading-relaxed max-w-md mx-auto mb-8">
+            Practical tips, tool breakdowns, and client acquisition strategies — delivered every week. No fluff.
+          </p>
+
+          {subState === 'success' ? (
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-2">
+                <CheckCircle className="w-7 h-7 text-emerald-400" />
+              </div>
+              <p className="text-white font-black text-lg">You're in!</p>
+              <p className="text-gray-400 text-sm">Check your inbox — your first tips are on the way.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+              <input
+                type="text"
+                placeholder="First name"
+                value={subName}
+                onChange={(e) => setSubName(e.target.value)}
+                required
+                className="flex-1 min-w-0 px-4 py-3.5 bg-gray-900 border border-gray-700 hover:border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-white placeholder-gray-500 text-sm outline-none transition-colors"
+              />
+              <input
+                type="email"
+                placeholder="Email address"
+                value={subEmail}
+                onChange={(e) => setSubEmail(e.target.value)}
+                required
+                className="flex-[2] min-w-0 px-4 py-3.5 bg-gray-900 border border-gray-700 hover:border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-white placeholder-gray-500 text-sm outline-none transition-colors"
+              />
+              <button
+                type="submit"
+                disabled={subState === 'loading'}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-60 text-white font-bold rounded-xl transition-all duration-200 text-sm whitespace-nowrap shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 disabled:translate-y-0"
+              >
+                {subState === 'loading' ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>Subscribe</>
+                )}
+              </button>
+            </form>
+          )}
+
+          {subState === 'error' && (
+            <p className="text-red-400 text-xs mt-3">{subError}</p>
+          )}
+
+          <p className="text-xs text-gray-600 mt-4">No spam. Unsubscribe anytime.</p>
         </div>
       </section>
 

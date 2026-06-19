@@ -239,6 +239,66 @@ export default function LaunchKitDownloadsPage({ onNavigate }: LaunchKitDownload
         </div>
       </div>
 
+      {/* ── WELCOME MESSAGE ── */}
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 pt-10 pb-2">
+        <div className="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-3xl px-8 py-10 sm:px-12">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100 border border-blue-200 text-blue-700 text-xs font-black uppercase tracking-widest mb-5">
+              <CheckCircle className="w-3.5 h-3.5" />
+              Welcome to the AI Agency Launch Kit
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-950 leading-tight mb-4">
+              You now have everything you need to launch.
+            </h2>
+            <p className="text-gray-600 leading-relaxed mb-4 text-base">
+              You now have access to the exact frameworks, templates, scripts, and implementation guides designed to help you launch your first AI business faster.
+            </p>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Start with the <span className="font-bold text-gray-700">First Client Acquisition Roadmap</span> and work through the resources in order. Everything builds on the step before it.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ── RECOMMENDED ORDER ── */}
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 pt-8 pb-2">
+        <div className="bg-gray-950 rounded-3xl overflow-hidden">
+          <div className="px-8 py-8 sm:px-12">
+            <div className="flex items-center gap-3 mb-7">
+              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0">
+                <Star className="w-4 h-4 text-white" fill="currentColor" />
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-blue-400 mb-0.5">Start Here</p>
+                <h3 className="text-lg font-black text-white leading-tight">Recommended Order</h3>
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                { n: 1, title: 'First Client Acquisition Roadmap', note: 'Begin here — your day-by-day plan' },
+                { n: 2, title: 'AI Business Opportunity Guide', note: 'Understand the market' },
+                { n: 3, title: 'Offer Creation Blueprint', note: 'Build your service offer' },
+                { n: 4, title: 'AI Audit Framework', note: 'Open client conversations' },
+                { n: 5, title: 'Discovery Call Script', note: 'Close with confidence' },
+                { n: 6, title: 'Proposal Template', note: 'Win the deal professionally' },
+                { n: 7, title: 'Client Onboarding Checklist', note: 'Start clients the right way' },
+                { n: 8, title: 'AI Tool Stack Guide', note: 'Set up your tool stack' },
+              ].map((item) => (
+                <div key={item.n} className="flex items-start gap-3 bg-gray-900 border border-gray-800 rounded-xl px-4 py-3.5">
+                  <span className="w-6 h-6 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center flex-shrink-0 text-xs font-black text-blue-400 tabular-nums mt-0.5">
+                    {item.n}
+                  </span>
+                  <div>
+                    <p className="text-xs font-bold text-white leading-snug mb-0.5">{item.title}</p>
+                    <p className="text-xs text-gray-600 leading-snug">{item.note}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ── RESOURCE GRID ── */}
       <div className="max-w-6xl mx-auto px-6 sm:px-8 py-12">
         <div className="grid sm:grid-cols-2 gap-5">

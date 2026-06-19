@@ -14,6 +14,7 @@ import ThankYouPage from './pages/ThankYouPage';
 import ThankYouLaunchKitPage from './pages/ThankYouLaunchKitPage';
 import DownloadsPage from './pages/DownloadsPage';
 import LaunchKitDownloadsPage from './pages/LaunchKitDownloadsPage';
+import AIAgencyAcceleratorPage from './pages/AIAgencyAcceleratorPage';
 
 const PAGE_ROUTES: Record<string, string> = {
   home:                    '/',
@@ -29,7 +30,8 @@ const PAGE_ROUTES: Record<string, string> = {
   'thank-you':             '/thank-you',
   'thank-you-launch-kit':  '/thank-you-launch-kit',
   'downloads':             '/downloads',
-  'launch-kit-downloads':  '/launch-kit-downloads',
+  'launch-kit-downloads':   '/launch-kit-downloads',
+  'ai-agency-accelerator':  '/ai-agency-accelerator',
 };
 
 export default function App() {
@@ -59,6 +61,7 @@ export default function App() {
           <Route path="/thank-you-launch-kit" element={<ThankYouLaunchKitPage  onNavigate={onNavigate} />} />
           <Route path="/downloads"            element={<DownloadsPage          onNavigate={onNavigate} />} />
           <Route path="/launch-kit-downloads" element={<LaunchKitDownloadsPage onNavigate={onNavigate} />} />
+          <Route path="/ai-agency-accelerator" element={<AIAgencyAcceleratorPage onNavigate={onNavigate} />} />
           <Route path="*"                     element={<HomePage               onNavigate={onNavigate} />} />
         </Routes>
       </main>
