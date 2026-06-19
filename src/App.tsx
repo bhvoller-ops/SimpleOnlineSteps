@@ -11,22 +11,25 @@ import QuizPage from './pages/QuizPage';
 import StartPage from './pages/StartPage';
 import AIAgencyLaunchKitPage from './pages/AIAgencyLaunchKitPage';
 import ThankYouPage from './pages/ThankYouPage';
+import ThankYouLaunchKitPage from './pages/ThankYouLaunchKitPage';
 import DownloadsPage from './pages/DownloadsPage';
+import LaunchKitDownloadsPage from './pages/LaunchKitDownloadsPage';
 
-// Map legacy page-key strings (used by all existing page components) to URL paths.
 const PAGE_ROUTES: Record<string, string> = {
-  home:                  '/',
-  'start-here':          '/start',
-  start:                 '/start',
-  quiz:                  '/quiz',
-  'book-call':           '/book-a-call',
-  'business-box':        '/business-in-a-box',
-  tools:                 '/tools',
-  about:                 '/about',
-  'business-quiz':       '/business-quiz',
-  'ai-agency-launch-kit': '/ai-agency-launch-kit',
-  'thank-you':            '/thank-you',
-  'downloads':            '/downloads',
+  home:                    '/',
+  'start-here':            '/start',
+  start:                   '/start',
+  quiz:                    '/quiz',
+  'book-call':             '/book-a-call',
+  'business-box':          '/business-in-a-box',
+  tools:                   '/tools',
+  about:                   '/about',
+  'business-quiz':         '/business-quiz',
+  'ai-agency-launch-kit':  '/ai-agency-launch-kit',
+  'thank-you':             '/thank-you',
+  'thank-you-launch-kit':  '/thank-you-launch-kit',
+  'downloads':             '/downloads',
+  'launch-kit-downloads':  '/launch-kit-downloads',
 };
 
 export default function App() {
@@ -43,18 +46,20 @@ export default function App() {
       <Navbar onNavigate={onNavigate} />
       <main className="flex-1">
         <Routes>
-          <Route path="/"                  element={<HomePage        onNavigate={onNavigate} />} />
-          <Route path="/start"             element={<StartHerePage   onNavigate={onNavigate} />} />
-          <Route path="/quiz"              element={<QuizPage        onNavigate={onNavigate} />} />
-          <Route path="/book-a-call"       element={<BookCallPage    onNavigate={onNavigate} />} />
-          <Route path="/business-in-a-box" element={<BusinessBoxPage onNavigate={onNavigate} />} />
-          <Route path="/tools"             element={<ToolsPage       onNavigate={onNavigate} />} />
-          <Route path="/about"             element={<AboutPage       onNavigate={onNavigate} />} />
-          <Route path="/business-quiz"     element={<StartPage       onNavigate={onNavigate} />} />
-          <Route path="/ai-agency-launch-kit" element={<AIAgencyLaunchKitPage onNavigate={onNavigate} />} />
-          <Route path="/thank-you"            element={<ThankYouPage          onNavigate={onNavigate} />} />
-          <Route path="/downloads"            element={<DownloadsPage         onNavigate={onNavigate} />} />
-          <Route path="*"                  element={<HomePage        onNavigate={onNavigate} />} />
+          <Route path="/"                     element={<HomePage               onNavigate={onNavigate} />} />
+          <Route path="/start"                element={<StartHerePage          onNavigate={onNavigate} />} />
+          <Route path="/quiz"                 element={<QuizPage               onNavigate={onNavigate} />} />
+          <Route path="/book-a-call"          element={<BookCallPage           onNavigate={onNavigate} />} />
+          <Route path="/business-in-a-box"    element={<BusinessBoxPage        onNavigate={onNavigate} />} />
+          <Route path="/tools"                element={<ToolsPage              onNavigate={onNavigate} />} />
+          <Route path="/about"                element={<AboutPage              onNavigate={onNavigate} />} />
+          <Route path="/business-quiz"        element={<StartPage              onNavigate={onNavigate} />} />
+          <Route path="/ai-agency-launch-kit" element={<AIAgencyLaunchKitPage  onNavigate={onNavigate} />} />
+          <Route path="/thank-you"            element={<ThankYouPage           onNavigate={onNavigate} />} />
+          <Route path="/thank-you-launch-kit" element={<ThankYouLaunchKitPage  onNavigate={onNavigate} />} />
+          <Route path="/downloads"            element={<DownloadsPage          onNavigate={onNavigate} />} />
+          <Route path="/launch-kit-downloads" element={<LaunchKitDownloadsPage onNavigate={onNavigate} />} />
+          <Route path="*"                     element={<HomePage               onNavigate={onNavigate} />} />
         </Routes>
       </main>
       <Footer onNavigate={onNavigate} />

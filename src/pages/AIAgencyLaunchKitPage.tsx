@@ -316,36 +316,31 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
             Stop watching endless AI videos and start building a real business with proven templates, scripts, systems, and roadmaps — designed for beginners who are ready to take action.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+          {/* Primary CTA */}
+          <div className="flex flex-col items-center gap-3 mb-3">
             <a
               href={STRIPE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/35 hover:shadow-blue-500/40 hover:-translate-y-0.5 text-base"
+              className="group inline-flex items-center gap-2.5 px-9 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/35 hover:shadow-blue-500/40 hover:-translate-y-0.5 text-base"
             >
-              Get The Launch Kit — $97
+              Get The Launch Kit
               <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
             </a>
-            <button
-              onClick={() => navigate('book-call')}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-semibold rounded-xl transition-all duration-200 text-base"
+            <p className="text-xs text-gray-500 max-w-xs leading-relaxed text-center">
+              After completing your purchase, return here and click{' '}
+              <span className="text-blue-400 font-semibold">Access Downloads</span>.
+            </p>
+            <a
+              href="/launch-kit-downloads"
+              className="inline-flex items-center gap-2 px-6 py-2.5 border border-gray-700 hover:border-blue-500 text-gray-400 hover:text-blue-300 font-semibold rounded-xl transition-all duration-200 text-sm"
             >
-              Book A Free Strategy Session
-            </button>
+              Access Downloads
+            </a>
           </div>
 
-          {/* Secure checkout badge */}
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-500 font-medium mb-6">
-            {['Secure Stripe Checkout', 'Instant Access After Purchase', 'One-Time Payment'].map((t) => (
-              <span key={t} className="flex items-center gap-1.5">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-                {t}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5 text-xs text-gray-500 font-medium">
-            {['Instant Digital Download', '14-Day Money-Back Guarantee', 'No Experience Required'].map((t) => (
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-500 font-medium mt-5">
+            {['Instant Digital Access', 'One-Time Payment', 'Beginner Friendly', 'No Coding Required'].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
                 {t}
@@ -483,11 +478,17 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-2.5 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/30 hover:-translate-y-0.5 text-base"
             >
-              Get The Launch Kit — $97
+              Get The Launch Kit
               <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
             </a>
-            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-gray-600 font-medium mt-3">
-              {['Secure Stripe Checkout', 'Instant Access After Purchase', 'One-Time Payment'].map((t) => (
+            <p className="text-xs text-gray-600 mt-3 mb-2">
+              Already purchased?{' '}
+              <a href="/launch-kit-downloads" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
+                Access Downloads
+              </a>
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-gray-600 font-medium mt-1">
+              {['Instant Digital Access', 'One-Time Payment', 'Beginner Friendly', 'No Coding Required'].map((t) => (
                 <span key={t} className="flex items-center gap-1.5">
                   <CheckCircle className="w-3 h-3 text-emerald-500 flex-shrink-0" />
                   {t}
@@ -688,13 +689,28 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
                 rel="noopener noreferrer"
                 className="group w-full flex items-center justify-center gap-2.5 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 text-base"
               >
-                Get The AI Agency Launch Kit — $97
+                Get The Launch Kit
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
               </a>
 
-              {/* Secure checkout badges */}
-              <div className="flex flex-col gap-1.5 mt-5">
-                {['Secure Stripe Checkout', 'Instant Access After Purchase', 'One-Time Payment'].map((t) => (
+              {/* Post-purchase note */}
+              <p className="text-center text-xs text-gray-500 mt-3 mb-3 leading-relaxed">
+                After completing your purchase, return here and click{' '}
+                <a href="/launch-kit-downloads" className="text-blue-500 hover:text-blue-400 font-semibold transition-colors">
+                  Access Downloads
+                </a>.
+              </p>
+
+              <a
+                href="/launch-kit-downloads"
+                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-600 hover:text-blue-700 font-bold rounded-xl transition-all duration-200 text-sm mb-5"
+              >
+                Access Downloads
+              </a>
+
+              {/* Trust badges */}
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                {['Instant Digital Access', 'One-Time Payment', 'Beginner Friendly', 'No Coding Required'].map((t) => (
                   <span key={t} className="flex items-center justify-center gap-1.5 text-xs text-gray-400 font-medium">
                     <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
                     {t}
@@ -705,15 +721,30 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
           </div>
 
           <p className="mt-8 text-sm text-gray-500">
-            Have questions first?{' '}
-            <button
-              onClick={() => navigate('book-call')}
-              className="text-blue-400 hover:text-blue-300 font-semibold underline underline-offset-2 transition-colors"
-            >
-              Book a free strategy call
-            </button>{' '}
-            — we'll answer everything.
+            14-Day Money-Back Guarantee &nbsp;·&nbsp; Launch pricing is temporary and will increase.
           </p>
+        </div>
+      </section>
+
+      {/* ══ 7b. STRATEGY SESSION (after Pricing) ════════════════════════ */}
+      <section className="bg-white py-16 border-b border-gray-100">
+        <div className="max-w-2xl mx-auto px-6 sm:px-8 text-center">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 mb-6">
+            <MessageSquare className="w-6 h-6 text-blue-600" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black text-gray-950 leading-tight mb-3">
+            Still Have Questions?
+          </h2>
+          <p className="text-gray-500 leading-relaxed max-w-lg mx-auto mb-7">
+            If you're unsure whether the AI Agency Launch Kit is right for you, book a free strategy session and we'll discuss your goals and next steps.
+          </p>
+          <button
+            onClick={() => navigate('book-call')}
+            className="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-700 hover:text-blue-700 font-bold rounded-xl transition-all duration-200 text-sm"
+          >
+            Book A Free Strategy Session
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </section>
 
@@ -749,6 +780,23 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
             ))}
           </div>
         </div>
+
+        {/* Not Ready Yet — Strategy Session CTA */}
+        <div className="max-w-2xl mx-auto px-6 sm:px-8 mt-10">
+          <div className="bg-white rounded-2xl border border-gray-200 px-7 py-8 text-center shadow-sm">
+            <h3 className="text-lg font-black text-gray-900 mb-2">Not Ready Yet?</h3>
+            <p className="text-sm text-gray-500 leading-relaxed mb-5">
+              Let's talk through your goals before you invest.
+            </p>
+            <button
+              onClick={() => navigate('book-call')}
+              className="inline-flex items-center gap-2 px-6 py-3 border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-700 hover:text-blue-700 font-bold rounded-xl transition-all duration-200 text-sm"
+            >
+              Book A Free Strategy Session
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* ══ 9. FINAL CTA ═════════════════════════════════════════════════ */}
@@ -766,26 +814,26 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
             The AI opportunity is real — but it won't wait forever. Get the system, follow the roadmap, and land your first AI client.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-5">
+          <div className="flex flex-col items-center gap-3 mb-6">
             <a
               href={STRIPE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/30 hover:-translate-y-0.5 text-base"
+              className="group inline-flex items-center gap-2.5 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/30 hover:-translate-y-0.5 text-base"
             >
-              Get The AI Agency Launch Kit — $97
+              Get The Launch Kit
               <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
             </a>
-            <button
-              onClick={() => navigate('book-call')}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-semibold rounded-xl transition-all duration-200 text-base"
-            >
-              Book A Free Strategy Session
-            </button>
+            <p className="text-xs text-gray-500">
+              Already purchased?{' '}
+              <a href="/launch-kit-downloads" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
+                Access Downloads
+              </a>
+            </p>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-500 font-medium mb-4">
-            {['Secure Stripe Checkout', 'Instant Access After Purchase', 'One-Time Payment'].map((t) => (
+            {['Instant Digital Access', 'One-Time Payment', 'Beginner Friendly', 'No Coding Required'].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
                 {t}
