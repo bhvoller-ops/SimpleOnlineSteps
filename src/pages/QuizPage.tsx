@@ -18,7 +18,7 @@ import {
   TrendingUp,
   Clock,
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+const MAKE_WEBHOOK = 'https://hook.us2.make.com/0l3knnlxpvd7fosfqtad5pj44xjqf2aq';
 
 interface QuizPageProps {
   onNavigate: (page: string) => void;
@@ -172,6 +172,7 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
   const [leadForm, setLeadForm] = useState<LeadForm>({ name: '', email: '' });
   const [leadErrors, setLeadErrors] = useState<Partial<LeadForm>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [webhookFailed, setWebhookFailed] = useState(false);
   const [resultIndex, setResultIndex] = useState(0);
 
   const navigate = (page: string) => {
@@ -214,16 +215,28 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
     if (!validateLead()) return;
     setSubmitting(true);
     const result = results[resultIndex];
-    await supabase.from('quiz_leads').insert({
-      name: leadForm.name.trim(),
-      email: leadForm.email.trim(),
-      goal: answers.goal ?? null,
-      budget: answers.budget ?? null,
-      available_time: answers.available_time ?? null,
-      interest: answers.interest ?? null,
-      income_goal: answers.income_goal ?? null,
-      recommended_result: result.key,
-    });
+
+    try {
+      const res = await fetch(MAKE_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          firstName: leadForm.name.trim(),
+          email: leadForm.email.trim(),
+          recommendedPath: result.key,
+          goal: answers.goal ?? null,
+          budget: answers.budget ?? null,
+          timeAvailable: answers.available_time ?? null,
+          interest: answers.interest ?? null,
+          incomeGoal: answers.income_goal ?? null,
+        }),
+      });
+      if (!res.ok) setWebhookFailed(true);
+    } catch {
+      setWebhookFailed(true);
+    }
+
     setSubmitting(false);
     setStep('result');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -235,6 +248,7 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
     setAnswers({});
     setLeadForm({ name: '', email: '' });
     setLeadErrors({});
+    setWebhookFailed(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -506,6 +520,14 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
                   </div>
 
                   {/* CTAs */}
+                  {webhookFailed && (
+                    <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 mb-4">
+                      <span className="text-amber-500 mt-0.5 flex-shrink-0 text-sm">⚠</span>
+                      <p className="text-xs text-amber-800 leading-relaxed">
+                        Your recommendation is ready. Please save this page or book a strategy call.
+                      </p>
+                    </div>
+                  )}
                   <div className="space-y-3">
                     <button
                       onClick={() => navigate('book-call')}

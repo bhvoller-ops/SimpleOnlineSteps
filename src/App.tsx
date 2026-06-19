@@ -9,18 +9,24 @@ import AboutPage from './pages/AboutPage';
 import BookCallPage from './pages/BookCallPage';
 import QuizPage from './pages/QuizPage';
 import StartPage from './pages/StartPage';
+import AIAgencyLaunchKitPage from './pages/AIAgencyLaunchKitPage';
+import ThankYouPage from './pages/ThankYouPage';
+import DownloadsPage from './pages/DownloadsPage';
 
 // Map legacy page-key strings (used by all existing page components) to URL paths.
 const PAGE_ROUTES: Record<string, string> = {
-  home:             '/',
-  'start-here':     '/start',
-  start:            '/start',
-  quiz:             '/quiz',
-  'book-call':      '/book-a-call',
-  'business-box':   '/business-in-a-box',
-  tools:            '/tools',
-  about:            '/about',
-  'business-quiz':  '/business-quiz',
+  home:                  '/',
+  'start-here':          '/start',
+  start:                 '/start',
+  quiz:                  '/quiz',
+  'book-call':           '/book-a-call',
+  'business-box':        '/business-in-a-box',
+  tools:                 '/tools',
+  about:                 '/about',
+  'business-quiz':       '/business-quiz',
+  'ai-agency-launch-kit': '/ai-agency-launch-kit',
+  'thank-you':            '/thank-you',
+  'downloads':            '/downloads',
 };
 
 export default function App() {
@@ -45,6 +51,9 @@ export default function App() {
           <Route path="/tools"             element={<ToolsPage       onNavigate={onNavigate} />} />
           <Route path="/about"             element={<AboutPage       onNavigate={onNavigate} />} />
           <Route path="/business-quiz"     element={<StartPage       onNavigate={onNavigate} />} />
+          <Route path="/ai-agency-launch-kit" element={<AIAgencyLaunchKitPage onNavigate={onNavigate} />} />
+          <Route path="/thank-you"            element={<ThankYouPage          onNavigate={onNavigate} />} />
+          <Route path="/downloads"            element={<DownloadsPage         onNavigate={onNavigate} />} />
           <Route path="*"                  element={<HomePage        onNavigate={onNavigate} />} />
         </Routes>
       </main>

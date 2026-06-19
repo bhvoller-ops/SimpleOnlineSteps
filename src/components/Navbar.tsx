@@ -9,7 +9,7 @@ interface NavbarProps {
 const navLinks = [
   { label: 'Home',                  path: '/' },
   { label: 'Start Here',            path: '/start' },
-  { label: 'Business Launch Quiz',  path: '/quiz' },
+  { label: 'AI Agency Launch Kit',  path: '/ai-agency-launch-kit' },
   { label: 'Business-in-a-Box',     path: '/business-in-a-box' },
   { label: 'Tools',                 path: '/tools' },
   { label: 'About',                 path: '/about' },
