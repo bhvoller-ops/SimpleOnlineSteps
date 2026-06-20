@@ -1,4 +1,6 @@
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { trackPageView } from './lib/analytics';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -36,6 +38,14 @@ const PAGE_ROUTES: Record<string, string> = {
   'accelerator-booking':     '/accelerator-booking',
 };
 
+function RouteTracker() {
+  const location = useLocation();
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location]);
+  return null;
+}
+
 export default function App() {
   const nav = useNavigate();
 
@@ -48,6 +58,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar onNavigate={onNavigate} />
+      <RouteTracker />
       <main className="flex-1">
         <Routes>
           <Route path="/"                     element={<HomePage               onNavigate={onNavigate} />} />

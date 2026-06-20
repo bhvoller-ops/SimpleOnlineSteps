@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GA } from '../lib/analytics';
 import {
   Download,
   CheckCircle,
@@ -401,7 +402,7 @@ export default function LaunchKitDownloadsPage({ onNavigate }: LaunchKitDownload
 
             <div className="relative flex-shrink-0">
               <button
-                onClick={() => navigate('book-call')}
+                onClick={() => { GA.bookStrategySession(); navigate('book-call'); }}
                 className="group inline-flex items-center gap-2.5 px-7 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/25 hover:-translate-y-0.5 text-base whitespace-nowrap"
               >
                 Book A Free Strategy Session

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { GA } from '../lib/analytics';
 import {
   ArrowRight,
   ArrowLeft,
@@ -768,7 +769,7 @@ export default function StartPage({ onNavigate }: StartPageProps) {
                   </h3>
                   <div className="space-y-3">
                     <button
-                      onClick={() => nav('book-call')}
+                      onClick={() => { GA.bookStrategySession(); nav('book-call'); }}
                       className="w-full flex items-center justify-center gap-2.5 py-4 text-white font-black text-base rounded-xl transition-all duration-200 hover:-translate-y-0.5"
                       style={{
                         background: `linear-gradient(135deg, ${path.accent} 0%, ${path.accent}cc 100%)`,
@@ -842,7 +843,7 @@ export default function StartPage({ onNavigate }: StartPageProps) {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
-                  onClick={() => nav('book-call')}
+                  onClick={() => { GA.bookStrategySession(); nav('book-call'); }}
                   className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/30 hover:-translate-y-0.5"
                 >
                   <Phone className="w-4 h-4" />

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GA } from '../lib/analytics';
 import {
   ArrowRight,
   CheckCircle,
@@ -322,6 +323,7 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
               href={STRIPE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={GA.getLaunchKit}
               className="group inline-flex items-center gap-2.5 px-9 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/35 hover:shadow-blue-500/40 hover:-translate-y-0.5 text-base"
             >
               Get The Launch Kit
@@ -476,6 +478,7 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
               href={STRIPE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={GA.getLaunchKit}
               className="group inline-flex items-center gap-2.5 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/30 hover:-translate-y-0.5 text-base"
             >
               Get The Launch Kit
@@ -687,6 +690,7 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
                 href={STRIPE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={GA.getLaunchKit}
                 className="group w-full flex items-center justify-center gap-2.5 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 text-base"
               >
                 Get The Launch Kit
@@ -739,7 +743,7 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
             If you're unsure whether the AI Agency Launch Kit is right for you, book a free strategy session and we'll discuss your goals and next steps.
           </p>
           <button
-            onClick={() => navigate('book-call')}
+            onClick={() => { GA.bookStrategySession(); navigate('book-call'); }}
             className="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-700 hover:text-blue-700 font-bold rounded-xl transition-all duration-200 text-sm"
           >
             Book A Free Strategy Session
@@ -789,7 +793,7 @@ export default function AIAgencyLaunchKitPage({ onNavigate }: AIAgencyLaunchKitP
               Let's talk through your goals before you invest.
             </p>
             <button
-              onClick={() => navigate('book-call')}
+              onClick={() => { GA.bookStrategySession(); navigate('book-call'); }}
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-700 hover:text-blue-700 font-bold rounded-xl transition-all duration-200 text-sm"
             >
               Book A Free Strategy Session

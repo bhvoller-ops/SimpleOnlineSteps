@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ArrowRight, ArrowLeft, CheckCircle, Brain, DollarSign, Rocket, Zap, Clock, Laptop, Users } from 'lucide-react';
+import { GA } from '../lib/analytics';
 
 interface StartHerePageProps {
   onNavigate: (page: string) => void;
@@ -294,7 +295,7 @@ export default function StartHerePage({ onNavigate }: StartHerePageProps) {
                       View My Business System <ArrowRight className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => navigate('book-call')}
+                      onClick={() => { GA.bookStrategySession(); navigate('book-call'); }}
                       className="w-full py-3.5 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
                     >
                       Book a Free Strategy Call

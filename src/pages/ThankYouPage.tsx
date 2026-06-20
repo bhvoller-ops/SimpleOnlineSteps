@@ -10,6 +10,7 @@ import {
   Zap,
   PartyPopper,
 } from 'lucide-react';
+import { GA } from '../lib/analytics';
 
 interface ThankYouPageProps {
   onNavigate: (page: string) => void;
@@ -197,7 +198,7 @@ export default function ThankYouPage({ onNavigate }: ThankYouPageProps) {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
             <button
-              onClick={() => navigate('book-call')}
+              onClick={() => { GA.bookStrategySession(); navigate('book-call'); }}
               className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 text-sm"
             >
               <Phone className="w-4 h-4" />
@@ -231,7 +232,7 @@ export default function ThankYouPage({ onNavigate }: ThankYouPageProps) {
               Get a 1-on-1 session with our team. We'll answer your questions, help you identify your first target clients, and make sure you walk away with a clear action plan.
             </p>
             <button
-              onClick={() => navigate('book-call')}
+              onClick={() => { GA.bookStrategySession(); navigate('book-call'); }}
               className="inline-flex items-center gap-2.5 px-8 py-4 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-orange-500/25 hover:-translate-y-0.5 text-base"
             >
               <Phone className="w-5 h-5" />
@@ -262,7 +263,7 @@ export default function ThankYouPage({ onNavigate }: ThankYouPageProps) {
               Download Resources
             </button>
             <button
-              onClick={() => navigate('book-call')}
+              onClick={() => { GA.bookStrategySession(); navigate('book-call'); }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 border border-gray-700 hover:border-gray-400 text-gray-300 hover:text-white font-semibold rounded-xl transition-all duration-200 text-sm"
             >
               <Phone className="w-4 h-4" />

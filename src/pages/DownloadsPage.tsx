@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GA } from '../lib/analytics';
 import {
   Lock,
   Download,
@@ -359,7 +360,7 @@ export default function DownloadsPage({ onNavigate }: DownloadsPageProps) {
             {/* CTA */}
             <div className="flex-shrink-0">
               <button
-                onClick={() => navigate('book-call')}
+                onClick={() => { GA.bookStrategySession(); navigate('book-call'); }}
                 className="group inline-flex items-center gap-2.5 px-7 py-4 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl transition-all duration-200 shadow-xl shadow-orange-500/20 hover:-translate-y-0.5 text-base whitespace-nowrap"
               >
                 Book A Free Strategy Session

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GA } from '../lib/analytics';
 import {
   ArrowRight,
   CheckCircle,
@@ -282,7 +283,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
             <button
-              onClick={() => navigate('quiz')}
+              onClick={() => { GA.takeQuiz(); navigate('quiz'); }}
               className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 bg-blue-600 text-white text-base font-bold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-0.5"
             >
               Take the Free Business Launch Quiz
@@ -416,6 +417,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   href="https://buy.stripe.com/bJe6oI8CUeKP4lWaozcZa00"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={GA.getLaunchKit}
                   className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 text-base"
                 >
                   Get The Launch Kit
@@ -503,7 +505,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
           <div className="text-center">
             <button
-              onClick={() => navigate('quiz')}
+              onClick={() => { GA.takeQuiz(); navigate('quiz'); }}
               className="group inline-flex items-center gap-2.5 px-7 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/25 hover:-translate-y-0.5 text-base"
             >
               Take the Free Business Launch Quiz
@@ -545,7 +547,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
             {/* Quiz CTA card */}
             <div
-              onClick={() => navigate('quiz')}
+              onClick={() => { GA.takeQuiz(); navigate('quiz'); }}
               className="group cursor-pointer flex items-center justify-between gap-4 p-6 rounded-2xl border-2 border-dashed border-blue-200 bg-blue-50/50 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200"
             >
               <div>
@@ -778,7 +780,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           </p>
 
           <button
-            onClick={() => navigate('quiz')}
+            onClick={() => { GA.takeQuiz(); navigate('quiz'); }}
             className="group inline-flex items-center gap-3 px-8 py-5 bg-blue-600 text-white text-lg font-bold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-2xl shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-0.5"
           >
             Take the Free Business Launch Quiz

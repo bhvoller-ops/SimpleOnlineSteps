@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GA } from '../lib/analytics';
 import {
   ArrowRight,
   ArrowLeft,
@@ -530,7 +531,7 @@ export default function QuizPage({ onNavigate }: QuizPageProps) {
                   )}
                   <div className="space-y-3">
                     <button
-                      onClick={() => navigate('book-call')}
+                      onClick={() => { GA.bookStrategySession(); navigate('book-call'); }}
                       className="w-full flex items-center justify-center gap-2.5 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-0.5"
                     >
                       Book a Free Strategy Session
