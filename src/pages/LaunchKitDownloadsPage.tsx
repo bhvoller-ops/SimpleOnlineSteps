@@ -412,6 +412,58 @@ export default function LaunchKitDownloadsPage({ onNavigate }: LaunchKitDownload
         </div>
       </div>
 
+      {/* ── ACCELERATOR UPSELL ── */}
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 pb-8">
+        <div className="relative overflow-hidden bg-gray-950 border border-gray-800 rounded-3xl">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_100%_50%,_#1d4ed818,_transparent)] pointer-events-none" />
+          <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500" />
+
+          <div className="relative px-8 py-10 sm:px-12 flex flex-col lg:flex-row items-center gap-10 text-center lg:text-left">
+
+            {/* Price badge */}
+            <div className="relative flex-shrink-0">
+              <div className="w-24 h-24 rounded-2xl bg-blue-600 flex flex-col items-center justify-center shadow-2xl shadow-blue-600/30 mx-auto lg:mx-0">
+                <span className="text-xs font-black text-blue-200 uppercase tracking-widest leading-none mb-1">Only</span>
+                <span className="text-3xl font-black text-white leading-none">$197</span>
+              </div>
+            </div>
+
+            {/* Text */}
+            <div className="flex-1 min-w-0">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-black uppercase tracking-widest mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                Private 1-on-1 · 60 Minutes
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-white mb-2 leading-tight">
+                Need More Personalized Help?
+              </h3>
+              <p className="text-gray-400 text-sm leading-relaxed max-w-lg mb-4">
+                Book a Private AI Agency Accelerator Session — a 60-minute 1-on-1 strategy call where we build your business model, offer, pricing, and 30-day action plan together.
+              </p>
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-1.5">
+                {['60 Minutes', 'Personalized Guidance', 'Written Summary Included', '7-Day Guarantee'].map((t) => (
+                  <span key={t} className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="relative flex-shrink-0">
+              <a
+                href="/ai-agency-accelerator"
+                className="group inline-flex items-center gap-2.5 px-7 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-xl shadow-blue-600/25 hover:-translate-y-0.5 text-base whitespace-nowrap"
+              >
+                Learn More
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ── SUPPORT ── */}
       <div className="max-w-6xl mx-auto px-6 sm:px-8 pb-16">
         <div className="bg-gray-50 border border-gray-200 rounded-2xl px-8 py-8 text-center">
